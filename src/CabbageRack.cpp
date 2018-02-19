@@ -1,11 +1,5 @@
 #include "Cabbage.hpp"
-#include "csound.hpp"
-#include <iostream>
-#include <string>
-#include <math.h>
-#include <cstdlib>
-#include <stdio.h>
-#include <stdlib.h>
+
 
 using namespace std;
 
@@ -14,6 +8,7 @@ void MessageCallback(CSOUND* cs, int attr, const char *format, va_list valist)
   vprintf(format, valist);   
   return;
 }
+
 
 struct CabbageRack : Module {
 	enum ParamIds {
@@ -43,8 +38,8 @@ struct CabbageRack : Module {
 	float csScale = 1;
 	float phase = 0.0;
 	float blinkPhase = 0.0;
-	int numInputs, numOutputs;
-
+	int numInputs, numOutputs, numControlChannels;
+	vector<CabbageControl> cabbageControls;
 
     void createAndCompileCsound() 
 	{
@@ -71,10 +66,22 @@ struct CabbageRack : Module {
 			csScale = csound->Get0dBFS();
 		}
 
+		cabbageControls = getCabbageControlVector("./plugins/CabbageRack/src/test.csd");
+		numControlChannels = getNumberOfControlChannels(cabbageControls);
+
+		cout << "Number of Control Channels is " << numControlChannels << "\n";
+		for (auto channel : cabbageControls)
+		{
+			cout << channel.type << "\n";
+			cout << channel.channel << "\n";
+			cout << channel.range[MIN] << "\n";
+			cout << channel.range[MAX] << "\n";
+			cout << channel.range[VALUE] << "\n";
+		}
     }
 
 	CabbageRack() : 
-	Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS),
+	Module(numControlChannels+1, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS),
 	numInputs(NUM_INPUTS),
 	numOutputs(NUM_OUTPUTS)
 	{
@@ -90,11 +97,8 @@ struct CabbageRack : Module {
 
 	void step() override;
 
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
 };
+
 
 
 void CabbageRack::step() {
@@ -103,6 +107,15 @@ void CabbageRack::step() {
 	{
 		kIndex = 0;
 		compileError = csound->PerformKsmps();
+		int controlIndex = 0;
+		for( int i = 0 ; i < (int)cabbageControls.size();i++)
+		{
+			if(cabbageControls[i].hasChannel)
+			{
+				csound->SetChannel(cabbageControls[i].channel.c_str(), params[controlIndex+1].value);
+				controlIndex++;
+			}				
+		}
 	}
 
 	
@@ -126,10 +139,20 @@ void CabbageRack::step() {
 }
 
 
-MyModuleWidget::MyModuleWidget() {
+MyModuleWidget::MyModuleWidget() 
+{
 	CabbageRack *module = new CabbageRack();
 	setModule(module);
-	box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
+	for( auto control : module->cabbageControls)
+	{
+		if(control.type == "form")
+			box.size = Vec(control.width, control.height);
+			cout << control.width << "\n";
+			cout << control.height << "\n";
+	}
+
+
+	//box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 
 	{
 		SVGPanel *panel = new SVGPanel();
@@ -143,7 +166,18 @@ MyModuleWidget::MyModuleWidget() {
 	addChild(createScrew<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 	addChild(createScrew<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-	addParam(createParam<Davies1900hBlackKnob>(Vec(28, 87), module, CabbageRack::PITCH_PARAM, -3.0, 3.0, 0.0));
+	for( int i = 0 ; i < module->cabbageControls.size() ; i++)
+	{
+		if(module->cabbageControls[i].hasChannel)
+		{
+			if(module->cabbageControls[i].type == "rslider")
+			addParam(createParam<Davies1900hBlackKnob>(Vec(module->cabbageControls[i].bounds[0], module->cabbageControls[i].bounds[1]), module, i, module->cabbageControls[i].range[MIN], 
+																				module->cabbageControls[i].range[MAX],
+																				module->cabbageControls[i].range[VALUE]));
+		}
+
+	}
+		
 
 	addInput(createInput<PJ301MPort>(Vec(33, 186), module, CabbageRack::PITCH_INPUT));
 
