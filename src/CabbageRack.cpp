@@ -26,6 +26,7 @@ struct CabbageRack : Module {
 	};
 	enum OutputIds {
 		OUTPUT1,
+		OUTPUT2,
 		NUM_OUTPUTS
 	};
 	enum LightIds {
@@ -42,6 +43,7 @@ struct CabbageRack : Module {
 	float csScale = 1;
 	float phase = 0.0;
 	float blinkPhase = 0.0;
+	int numInputs, numOutputs;
 
 
     void createAndCompileCsound() 
@@ -49,10 +51,7 @@ struct CabbageRack : Module {
 		csound = new Csound(); 
 		csound->SetOption((char*)"-n");
 		csound->SetOption((char*)"-d");
-        spout = csound->GetSpout();                                   
-        spin  = csound->GetSpin();                                     
-        ksmps = csound->GetKsmps();
-		csScale = csound->Get0dBFS();
+
 		CSOUND_PARAMS* csoundParams = nullptr;
 		csoundParams = new CSOUND_PARAMS();
 		csoundParams->sample_rate_override = engineGetSampleRate();
@@ -64,13 +63,21 @@ struct CabbageRack : Module {
 		compileError = csound->Compile("./plugins/CabbageRack/src/test.csd");
 		if(compileError != 0)
 			cout << "Csound could not compile" << endl;
+		else
+		{
+			spout = csound->GetSpout();                                   
+			spin  = csound->GetSpin();                                     
+			ksmps = csound->GetKsmps();
+			csScale = csound->Get0dBFS();
+		}
 
-		csound->PerformKsmps();
     }
 
-	CabbageRack() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) 
+	CabbageRack() : 
+	Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS),
+	numInputs(NUM_INPUTS),
+	numOutputs(NUM_OUTPUTS)
 	{
-		
 		createAndCompileCsound();                                     
         csound->SetMessageCallback(MessageCallback);
 	}
@@ -91,35 +98,31 @@ struct CabbageRack : Module {
 
 
 void CabbageRack::step() {
-	// Implement a simple sine oscillator
-	//float deltaTime = 1.0 / engineGetSampleRate();
-	
+		
 	if(kIndex == ksmps)
 	{
 		kIndex = 0;
-		csound->PerformKsmps();
-		//compileError = csound->PerformKsmps();
+		compileError = csound->PerformKsmps();
 	}
 
-	kIndex++;
-	// if (compileError == 0)
-	// {
-	// 	samplePos = kIndex * outputs[NUM_OUTPUTS].value;
+	
+	if (compileError == 0)
+	{
+		samplePos = kIndex*numOutputs;
 
-	// 	for (int channel = 0; channel < outputs[NUM_OUTPUTS].value; ++channel)
-	// 	{
-	// 		outputs[channel].value = (spout[samplePos] / csScale);
-	// 		++samplePos;
-	// 	}
-	// }
+		for (int channel = 0; channel < numOutputs; ++channel)
+		{			
+			outputs[channel].value = (spout[samplePos] / csScale);
+			++kIndex;
+		}
+	}
 
-	//outputs[OUTPUT1].value = 0.f;
-	// ksmps++;
-	// Blink light at 1Hz
-	// blinkPhase += deltaTime;
-	// if (blinkPhase >= 1.0)
-	// 	blinkPhase -= 1.0;
-	// lights[BLINK_LIGHT].value = (blinkPhase < 0.5) ? 1.0 : 0.0;
+	//Blink light at 1Hz
+	float deltaTime = 1.0 / engineGetSampleRate();
+	blinkPhase += deltaTime;
+	if (blinkPhase >= 1.0)
+		blinkPhase -= 1.0;
+	lights[BLINK_LIGHT].value = (blinkPhase < 0.5) ? 1.0 : 0.0;
 }
 
 
@@ -144,7 +147,8 @@ MyModuleWidget::MyModuleWidget() {
 
 	addInput(createInput<PJ301MPort>(Vec(33, 186), module, CabbageRack::PITCH_INPUT));
 
-	addOutput(createOutput<PJ301MPort>(Vec(33, 275), module, CabbageRack::OUTPUT1));
+	addOutput(createOutput<PJ301MPort>(Vec(46, 275), module, CabbageRack::OUTPUT1));
+	addOutput(createOutput<PJ301MPort>(Vec(16, 275), module, CabbageRack::OUTPUT2));
 
 	addChild(createLight<MediumLight<RedLight>>(Vec(41, 59), module, CabbageRack::BLINK_LIGHT));
 }
