@@ -1,7 +1,7 @@
 <Cabbage>
-form size(120, 380), colour(255, 0, 0)
-rslider bounds(20, 10, 80, 80), channel("freq1"), range(0, 1000, 200)
-rslider bounds(20, 120, 80, 80), channel("freq2"), range(0, 1000, 200)
+form size(120, 380), colour(40, 40, 40)
+rslider bounds(40, 32, 50, 50) channel("freq1") range(0, 1000, 56, 1, 0.001) 
+rslider bounds(40, 90, 50, 50) channel("freq2") range(0, 1000, 120, 1, 0.001) 
 </Cabbage>
 <CsoundSynthesizer>
 <CsOptions>

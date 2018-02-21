@@ -1,6 +1,6 @@
 #include "rack.hpp"
 #include "csound.hpp"
-#include "CabbageSVG.hpp"
+#include "CabbageRackGUI.hpp"
 
 #include <iostream>
 #include <string>
@@ -12,16 +12,15 @@
 #include <sstream>
 
 enum Range {
-	min, 
-	max, 
-	value	
+	min, max, value	
 };
 
 enum Colour {
-	r,
-	g,
-	b,
-	a
+	r,g,b,a
+};
+
+enum Bounds {
+	x, y, width, height 
 };
 
 using namespace rack;

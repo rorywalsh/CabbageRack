@@ -183,7 +183,12 @@ MyModuleWidget::MyModuleWidget()
 		{
 			if(module->cabbageControls[i].type == "rslider")
 			{
-				createRSliderSVG(plugin->path, 100, 100, createRGBAString(255, 255, 255, 0), createRGBAString(0, 0, 0, 0), createRGBAString(147, 210, 0, 0));
+				createRSliderSVG(plugin->path, module->cabbageControls[i].bounds[Bounds::width], 
+												module->cabbageControls[i].bounds[Bounds::height], 
+												createRGBAString(255, 255, 255, 255), 
+												createRGBAString(0, 0, 0, 255), 
+												createRGBAString(147, 210, 0, 255));
+
 				addParam(createParam<cabbageRSlider>(Vec(module->cabbageControls[i].bounds[0], module->cabbageControls[i].bounds[1]), module, i, 
 																				module->cabbageControls[i].range[Range::min], 
 																				module->cabbageControls[i].range[Range::max],
