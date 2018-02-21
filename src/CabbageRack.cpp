@@ -74,9 +74,9 @@ struct CabbageRack : Module {
 		{
 			cout << channel.type << "\n";
 			cout << channel.channel << "\n";
-			cout << channel.range[MIN] << "\n";
-			cout << channel.range[MAX] << "\n";
-			cout << channel.range[VALUE] << "\n";
+			cout << channel.range[Range::min] << "\n";
+			cout << channel.range[Range::max] << "\n";
+			cout << channel.range[Range::value] << "\n";
 		}
     }
 
@@ -143,12 +143,23 @@ MyModuleWidget::MyModuleWidget()
 {
 	CabbageRack *module = new CabbageRack();
 	setModule(module);
+
 	for( auto control : module->cabbageControls)
 	{
 		if(control.type == "form")
+		{
 			box.size = Vec(control.width, control.height);
-			cout << control.width << "\n";
-			cout << control.height << "\n";
+			createFormBackgroundSVG(plugin->path, control.width, control.height, 
+									control.rgbaColour[Colour::r], 
+									control.rgbaColour[Colour::g], 
+									control.rgbaColour[Colour::b], 
+									control.rgbaColour[Colour::a]);
+
+			cout << "\n" << createRGBAString(control.rgbaColour[Colour::r], 
+									control.rgbaColour[Colour::g], 
+									control.rgbaColour[Colour::b], 
+									control.rgbaColour[Colour::a]) << "\n";
+		}
 	}
 
 
@@ -157,7 +168,7 @@ MyModuleWidget::MyModuleWidget()
 	{
 		SVGPanel *panel = new SVGPanel();
 		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/MyModule.svg")));
+		panel->setBackground(SVG::load(assetPlugin(plugin, "res/background.svg")));
 		addChild(panel);
 	}
 
@@ -171,9 +182,14 @@ MyModuleWidget::MyModuleWidget()
 		if(module->cabbageControls[i].hasChannel)
 		{
 			if(module->cabbageControls[i].type == "rslider")
-			addParam(createParam<Davies1900hBlackKnob>(Vec(module->cabbageControls[i].bounds[0], module->cabbageControls[i].bounds[1]), module, i, module->cabbageControls[i].range[MIN], 
-																				module->cabbageControls[i].range[MAX],
-																				module->cabbageControls[i].range[VALUE]));
+			{
+				createRSliderSVG(plugin->path, 100, 100, createRGBAString(255, 255, 255, 0), createRGBAString(0, 0, 0, 0), createRGBAString(147, 210, 0, 0));
+				addParam(createParam<cabbageRSlider>(Vec(module->cabbageControls[i].bounds[0], module->cabbageControls[i].bounds[1]), module, i, 
+																				module->cabbageControls[i].range[Range::min], 
+																				module->cabbageControls[i].range[Range::max],
+																				module->cabbageControls[i].range[Range::value]));
+		
+			}
 		}
 
 	}

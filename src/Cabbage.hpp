@@ -1,5 +1,7 @@
 #include "rack.hpp"
 #include "csound.hpp"
+#include "CabbageSVG.hpp"
+
 #include <iostream>
 #include <string>
 #include <math.h>
@@ -7,10 +9,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
+#include <sstream>
 
-#define MIN 0
-#define MAX 1
-#define VALUE 2
+enum Range {
+	min, 
+	max, 
+	value	
+};
+
+enum Colour {
+	r,
+	g,
+	b,
+	a
+};
 
 using namespace rack;
 using namespace std;
@@ -26,10 +38,25 @@ struct MyModuleWidget : ModuleWidget {
 	MyModuleWidget();
 };
 
+
+struct cabbageRSlider : SVGKnob {
+	cabbageRSlider() {
+        minAngle = -0.83 * M_PI;
+		maxAngle = 0.83 * M_PI;
+		sw->svg = SVG::load(assetPlugin(plugin, "res/rslider.svg"));
+		sw->wrap();
+		box.size = sw->box.size;
+	}
+};
+
+///////////////////////
+// parsing Cabbage file
+///////////////////////
 struct CabbageControl
 {
-	float range[3];
-	int bounds[4];
+	float range[3] = {0, 1, 0};
+	int rgbaColour[4] = {0,0,0,0};
+	int bounds[4] = {0,0,100,100};
 	int width, height;
 	string channel, text, label, caption, type;
 	bool hasChannel = false;
@@ -63,9 +90,9 @@ static vector<CabbageControl> getCabbageControlVector(string csdFile)
 			CabbageControl cabbageCtrl;
 			cabbageCtrl.type = control;
 			//init range
-			cabbageCtrl.range[MIN] = 0;
-			cabbageCtrl.range[MAX] = 1;
-			cabbageCtrl.range[VALUE] = 0;
+			cabbageCtrl.range[Range::min] = 0;
+			cabbageCtrl.range[Range::max] = 1;
+			cabbageCtrl.range[Range::value] = 0;
 
 			if (line.find("caption(") != std::string::npos)
 			{
@@ -87,6 +114,23 @@ static vector<CabbageControl> getCabbageControlVector(string csdFile)
 				channel = channel.substr(0, channel.find(")") - 1);
 				cabbageCtrl.channel = channel;
 				cabbageCtrl.hasChannel = true;
+			}
+
+			if (line.find("colour(") != std::string::npos)
+			{
+				string colour = line.substr(line.find("colour(") + 7);
+				colour = colour.substr(0, colour.find(")"));
+				char *p = strtok(&colour[0u], ",");
+				int argCount = 0;
+				while (p)
+				{
+					cabbageCtrl.rgbaColour[argCount] = atof(p);
+					argCount++;
+					//not handling increment or log sliders yet
+					if (argCount == 4)
+						break;
+					p = strtok(NULL, ",");
+				}
 			}
 
 			if (line.find("bounds(") != std::string::npos)
@@ -134,7 +178,7 @@ static vector<CabbageControl> getCabbageControlVector(string csdFile)
 			{
 				string value = line.substr(line.find("value(") + 6);
 				value = value.substr(0, value.find(")"));
-				cabbageCtrl.range[VALUE] = value.length() > 0 ? atof(value.c_str()) : 0;
+				cabbageCtrl.range[Range::value] = value.length() > 0 ? atof(value.c_str()) : 0;
 			}
 
 			cabbageControls.push_back(cabbageCtrl);

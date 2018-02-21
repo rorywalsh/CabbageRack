@@ -1,5 +1,5 @@
 <Cabbage>
-form size(120, 380)
+form size(120, 380), colour(255, 0, 0)
 rslider bounds(20, 10, 80, 80), channel("freq1"), range(0, 1000, 200)
 rslider bounds(20, 120, 80, 80), channel("freq2"), range(0, 1000, 200)
 </Cabbage>
