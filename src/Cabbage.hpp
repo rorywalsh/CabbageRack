@@ -54,7 +54,9 @@ struct cabbageRSlider : SVGKnob {
 struct CabbageControl
 {
 	float range[3] = {0, 1, 0};
-	int rgbaColour[4] = {0,0,0,0};
+	int colour[4] = {0,0,0,0};
+	int trackerColour[4] = {0,0,0,0};
+	int outlineColour[4] = {0,0,0,0};
 	int bounds[4] = {0,0,100,100};
 	int width, height;
 	string channel, text, label, caption, type;
@@ -123,7 +125,41 @@ static vector<CabbageControl> getCabbageControlVector(string csdFile)
 				int argCount = 0;
 				while (p)
 				{
-					cabbageCtrl.rgbaColour[argCount] = atof(p);
+					cabbageCtrl.colour[argCount] = atof(p);
+					argCount++;
+					//not handling increment or log sliders yet
+					if (argCount == 4)
+						break;
+					p = strtok(NULL, ",");
+				}
+			}
+
+			if (line.find("outlinecolour(") != std::string::npos)
+			{
+				string colour = line.substr(line.find("outlinecolour(") + 14);
+				colour = colour.substr(0, colour.find(")"));
+				char *p = strtok(&colour[0u], ",");
+				int argCount = 0;
+				while (p)
+				{
+					cabbageCtrl.outlineColour[argCount] = atof(p);
+					argCount++;
+					//not handling increment or log sliders yet
+					if (argCount == 4)
+						break;
+					p = strtok(NULL, ",");
+				}
+			}
+
+			if (line.find("trackercolour(") != std::string::npos)
+			{
+				string colour = line.substr(line.find("trackercolour(") + 14);
+				colour = colour.substr(0, colour.find(")"));
+				char *p = strtok(&colour[0u], ",");
+				int argCount = 0;
+				while (p)
+				{
+					cabbageCtrl.trackerColour[argCount] = atof(p);
 					argCount++;
 					//not handling increment or log sliders yet
 					if (argCount == 4)

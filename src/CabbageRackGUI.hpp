@@ -5,18 +5,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
+#include <iomanip>
 #include <sstream>
 
 using namespace std;
 
-static string createRGBAString(int r, int g, int b, int a=255)
+static string createRGBString(int r, int g, int b)
 {   
     int rgba = (r<<16) | (g<<8) | b;
     std::stringstream stream;
-    stream << std::hex << rgba;
+    stream << std::setw(6) << std::setfill('0') << std::hex << rgba;
     std::string result( stream.str() );
     std::stringstream output;
-    output << "fill=\"#" << result << "\" fill-opacity=\"" << float(a)/255.f << "\"";
+    output << "\"#" << result << "\"";
     return output.str();
 }
 
@@ -36,18 +37,19 @@ static void createFormBackgroundSVG(string path, int width, int height, int r, i
 
 static void createRSliderSVG(string path, int width, int height, string outline, string colour, string tracker)
 {
-        // <circle cx="20" cy="20" r="18" stroke="black" stroke-width="1" fill="#ffffff" fill-opacity="0" />
-        // <circle cx="20" cy="20" r="12.4" fill="#0" fill-opacity="1" />
-        // <rect width="10" height="11.6" 	x="15" 	y="0" fill="#ffffff" fill-opacity="1" />
-        // <rect width="8" 	height="12" 	x="16" 		y="0" fill="#93d200" fill-opacity="1" />
+//   <circle cx="50" cy="50" r="45" stroke-width="1" stroke="#000000" fill-opacity="0" />
+//   <circle cx="50" cy="50" r="36" fill="#000000" />
+//   <rect width="16" height="17" x="42" y="1" fill="#000000" />
+//   <rect width="14" height="15" x="43" y="2" fill="#93d200" />
+
 
     std::ostringstream svgText;
     int innerSize = width*.9f;
     svgText << "<svg height=\"" << width << "\" width=\"" << height << "\">\n";
-    svgText << "  <circle cx=\"" << width/2 << "\" cy=\"" << width/2 << "\" r=\"" << innerSize/2 << "\" " << outline << " />\n";
-    svgText << "  <circle cx=\"" << width/2 << "\" cy=\"" << width/2 << "\" r=\"" << (innerSize/2) * float(4.f/5.f) << "\" " << colour << " />\n";
-    svgText << "  <rect width=\"" << width*.24 << "\" height=\"" << height*.5 << "\" x=\"" << width*.38 << "\" y=\"" << 0 << "\" " << outline << " />\n";
-    svgText << "  <rect width=\"" << width*.20 << "\" height=\"" << height*.5 << "\" x=\"" << width*.40 << "\" y=\"" << 0 << "\" " << tracker << " />\n";
+    svgText << "  <circle cx=\"" << width/2 << "\" cy=\"" << width/2 << "\" r=\"" << innerSize/2 << "\" stroke-width=\"1\" stroke=" << outline << " fill-opacity=\"0\" />\n";
+    svgText << "  <circle cx=\"" << width/2 << "\" cy=\"" << width/2 << "\" r=\"" << (innerSize/2) * float(3.f/5.f) << "\" fill=" << colour << " />\n";
+    svgText << "  <rect width=\"" << width*.16 << "\" height=\"" << height*.22 << "\" x=\"" << width*.42 << "\" y=\"" << 1 << "\" fill=" << colour << " />\n";
+    svgText << "  <rect width=\"" << width*.14 << "\" height=\"" << height*.21 << "\" x=\"" << width*.43 << "\" y=\"" << 2 << "\" fill=" << tracker << " />\n";
     svgText << "</svg> ";
     cout << "==================\n" << svgText.str() << "\n=======================";
 

@@ -150,19 +150,17 @@ MyModuleWidget::MyModuleWidget()
 		{
 			box.size = Vec(control.width, control.height);
 			createFormBackgroundSVG(plugin->path, control.width, control.height, 
-									control.rgbaColour[Colour::r], 
-									control.rgbaColour[Colour::g], 
-									control.rgbaColour[Colour::b], 
-									control.rgbaColour[Colour::a]);
+									control.colour[Colour::r], 
+									control.colour[Colour::g], 
+									control.colour[Colour::b], 
+									control.colour[Colour::a]);
 
-			cout << "\n" << createRGBAString(control.rgbaColour[Colour::r], 
-									control.rgbaColour[Colour::g], 
-									control.rgbaColour[Colour::b], 
-									control.rgbaColour[Colour::a]) << "\n";
+			cout << "\n" << createRGBString(control.colour[Colour::r], 
+									control.colour[Colour::g], 
+									control.colour[Colour::b]) << "\n";
 		}
 	}
-
-
+	
 	//box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 
 	{
@@ -172,6 +170,13 @@ MyModuleWidget::MyModuleWidget()
 		addChild(panel);
 	}
 
+	{
+		Label *label = new Label();
+		label->box.pos = Vec(box.size.x - 7 * 15, 7);
+		label->text = "MIDI Clk-CV";
+		addChild(label);
+	}
+	
 	addChild(createScrew<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 	addChild(createScrew<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
 	addChild(createScrew<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
@@ -185,9 +190,15 @@ MyModuleWidget::MyModuleWidget()
 			{
 				createRSliderSVG(plugin->path, module->cabbageControls[i].bounds[Bounds::width], 
 												module->cabbageControls[i].bounds[Bounds::height], 
-												createRGBAString(255, 255, 255, 255), 
-												createRGBAString(0, 0, 0, 255), 
-												createRGBAString(147, 210, 0, 255));
+												createRGBString(module->cabbageControls[i].outlineColour[Colour::r],
+																module->cabbageControls[i].outlineColour[Colour::g],
+																module->cabbageControls[i].outlineColour[Colour::b]), 
+												createRGBString(module->cabbageControls[i].colour[Colour::r],
+																module->cabbageControls[i].colour[Colour::g],
+																module->cabbageControls[i].colour[Colour::b]), 
+												createRGBString(module->cabbageControls[i].trackerColour[Colour::r],
+																module->cabbageControls[i].trackerColour[Colour::g],
+																module->cabbageControls[i].trackerColour[Colour::b]));
 
 				addParam(createParam<cabbageRSlider>(Vec(module->cabbageControls[i].bounds[0], module->cabbageControls[i].bounds[1]), module, i, 
 																				module->cabbageControls[i].range[Range::min], 
