@@ -12,6 +12,17 @@
 
 using namespace std;
 
+std::string centered( std::string const& original, int targetSize )
+{
+    assert( targetSize >= 0 );
+    int padding = targetSize - checked_cast<int>( original.size() );
+    return padding > 0
+        ? std::string( padding / 2, ' ' ) 
+            + original
+            + std::string( targetSize - (padding / 2), ' ' )
+        : original;
+}
+
 struct CabbageRotarySlider : virtual Knob, FramebufferWidget 
 {
 	NVGcolor outline = nvgRGBA(10, 10, 10, 255);
