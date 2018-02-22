@@ -1,5 +1,5 @@
 #include "Cabbage.hpp"
-
+#include "CabbageRackGUI.hpp"
 
 using namespace std;
 
@@ -8,7 +8,6 @@ void MessageCallback(CSOUND* cs, int attr, const char *format, va_list valist)
   vprintf(format, valist);   
   return;
 }
-
 
 struct CabbageRack : Module {
 	enum ParamIds {
@@ -143,73 +142,71 @@ MyModuleWidget::MyModuleWidget()
 {
 	CabbageRack *module = new CabbageRack();
 	setModule(module);
-
+	int controlIndex = 0;
 	for( auto control : module->cabbageControls)
 	{
 		if(control.type == "form")
 		{
 			box.size = Vec(control.width, control.height);
-			createFormBackgroundSVG(plugin->path, control.width, control.height, 
-									control.colour[Colour::r], 
-									control.colour[Colour::g], 
-									control.colour[Colour::b], 
-									control.colour[Colour::a]);
-
-			cout << "\n" << createRGBString(control.colour[Colour::r], 
-									control.colour[Colour::g], 
-									control.colour[Colour::b]) << "\n";
+			CabbageForm *form = new CabbageForm(box.size, control.colour[Colour::r], control.colour[Colour::g], control.colour[Colour::b], control.colour[Colour::a]);
+			addChild(form);
 		}
+
+		else if(control.hasChannel)
+		{
+			if(control.type == "rslider")
+			{
+				createRSliderSVG(plugin->path,  control.bounds[Bounds::width], 
+												control.bounds[Bounds::height], 
+								createRGBString(control.outlineColour[Colour::r],
+												control.outlineColour[Colour::g],
+												control.outlineColour[Colour::b]), 
+								createRGBString(control.colour[Colour::r],
+												control.colour[Colour::g],
+												control.colour[Colour::b]), 
+								createRGBString(control.trackerColour[Colour::r],
+												control.trackerColour[Colour::g],
+												control.trackerColour[Colour::b]));
+
+				ParamWidget* widget = createParam<CabbageRSlider>(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]), module, controlIndex, 
+														control.range[Range::min], 
+														control.range[Range::max],
+														control.range[Range::value]);
+				dynamic_cast<CabbageRSlider*>(widget)->box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
+				dynamic_cast<CabbageRSlider*>(widget)->setColours(nvgRGBA(control.outlineColour[Colour::r],
+																			control.outlineColour[Colour::g],
+																			control.outlineColour[Colour::b],
+																			control.outlineColour[Colour::a]),
+																  	nvgRGBA(control.colour[Colour::r],
+																			control.colour[Colour::g],
+																			control.colour[Colour::b],
+																			control.colour[Colour::a]),
+																 	nvgRGBA(control.trackerColour[Colour::r],
+																			control.trackerColour[Colour::g],
+																			control.trackerColour[Colour::b],
+																			control.trackerColour[Colour::a]));
+				addParam(widget);
+			}
+		}	
+
+		controlIndex++;	
 	}
 	
-	//box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/background.svg")));
-		addChild(panel);
-	}
+	// CabbageLabel *label = new CabbageLabel(Vec(20, 20), Vec(100, 20), " Test");
+	// label->setLabelColour(255, 0, 255, 255);
+	// label->setBackgroundColour(0, 0, 0, 255);
+	// addChild(label);
 
-	{
-		Label *label = new Label();
-		label->box.pos = Vec(box.size.x - 7 * 15, 7);
-		label->text = "MIDI Clk-CV";
-		addChild(label);
-	}
-	
+	//CabbageRSlider *slider = new CabbageRSlider(Vec(20, 200), Vec(50, 50), " Test");
+	//slider->setLabelColour(255, 0, 255, 255);
+	//slider->setBackgroundColour(0, 0, 0, 255);
+
 	addChild(createScrew<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 	addChild(createScrew<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
 	addChild(createScrew<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 	addChild(createScrew<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-	for( int i = 0 ; i < module->cabbageControls.size() ; i++)
-	{
-		if(module->cabbageControls[i].hasChannel)
-		{
-			if(module->cabbageControls[i].type == "rslider")
-			{
-				createRSliderSVG(plugin->path, module->cabbageControls[i].bounds[Bounds::width], 
-												module->cabbageControls[i].bounds[Bounds::height], 
-												createRGBString(module->cabbageControls[i].outlineColour[Colour::r],
-																module->cabbageControls[i].outlineColour[Colour::g],
-																module->cabbageControls[i].outlineColour[Colour::b]), 
-												createRGBString(module->cabbageControls[i].colour[Colour::r],
-																module->cabbageControls[i].colour[Colour::g],
-																module->cabbageControls[i].colour[Colour::b]), 
-												createRGBString(module->cabbageControls[i].trackerColour[Colour::r],
-																module->cabbageControls[i].trackerColour[Colour::g],
-																module->cabbageControls[i].trackerColour[Colour::b]));
-
-				addParam(createParam<cabbageRSlider>(Vec(module->cabbageControls[i].bounds[0], module->cabbageControls[i].bounds[1]), module, i, 
-																				module->cabbageControls[i].range[Range::min], 
-																				module->cabbageControls[i].range[Range::max],
-																				module->cabbageControls[i].range[Range::value]));
-		
-			}
-		}
-
-	}
-		
 
 	addInput(createInput<PJ301MPort>(Vec(33, 186), module, CabbageRack::PITCH_INPUT));
 

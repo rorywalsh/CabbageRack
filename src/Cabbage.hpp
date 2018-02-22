@@ -1,7 +1,5 @@
 #include "rack.hpp"
 #include "csound.hpp"
-#include "CabbageRackGUI.hpp"
-
 #include <iostream>
 #include <string>
 #include <math.h>
@@ -9,7 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
-#include <sstream>
+
+
 
 enum Range {
 	min, max, value	
@@ -37,26 +36,15 @@ struct MyModuleWidget : ModuleWidget {
 	MyModuleWidget();
 };
 
-
-struct cabbageRSlider : SVGKnob {
-	cabbageRSlider() {
-        minAngle = -0.83 * M_PI;
-		maxAngle = 0.83 * M_PI;
-		sw->svg = SVG::load(assetPlugin(plugin, "res/rslider.svg"));
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
-
 ///////////////////////
 // parsing Cabbage file
 ///////////////////////
 struct CabbageControl
 {
 	float range[3] = {0, 1, 0};
-	int colour[4] = {0,0,0,0};
-	int trackerColour[4] = {0,0,0,0};
-	int outlineColour[4] = {0,0,0,0};
+	int colour[4] = {0,0,0,255};
+	int trackerColour[4] = {0,0,0,255};
+	int outlineColour[4] = {0,0,0,255};
 	int bounds[4] = {0,0,100,100};
 	int width, height;
 	string channel, text, label, caption, type;
