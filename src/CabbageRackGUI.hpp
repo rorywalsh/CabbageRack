@@ -12,36 +12,19 @@
 
 using namespace std;
 
-
-//void nvgArc(NVGcontext* ctx, float cx, float cy, float r, float a0, float a1, int dir);
-
-// struct CabbageRSlider : ParamWidget 
-// {
-
-// 	void onDragStart(EventDragStart &e) override;
-// 	void onDragMove(EventDragMove &e) override;
-// 	void onDragEnd(EventDragEnd &e) override;
-// 	/** Tell engine to smoothly vary this parameter */
-// 	void onChange(EventChange &e) override;
-
-
-
-// };
-
-struct CabbageRSlider : virtual Knob, FramebufferWidget 
+struct CabbageRotarySlider : virtual Knob, FramebufferWidget 
 {
-	float minAngle, maxAngle;
 	NVGcolor outline = nvgRGBA(10, 10, 10, 255);
 	NVGcolor inner = nvgRGBA(55, 55, 55, 255);
 	NVGcolor tracker = nvgRGBA(147, 210, 0, 255);
+	std::shared_ptr<Font> font;
+	char text[128];
+	int textHeight = 12;
 
-	CabbageRSlider()
+	CabbageRotarySlider()
 	{
-        minAngle = -0.83 * M_PI;
-		maxAngle = 0.83 * M_PI;
-		
-		// sw->svg = SVG::load(assetPlugin(plugin, "res/rslider.svg"));
-		// sw->wrap();
+		font = Font::load(assetPlugin(plugin, "res/Vera-Bold.ttf"));
+		strncpy(text, "Freq.", sizeof(text));
 	}
 
 	void setColours(NVGcolor out, NVGcolor in, NVGcolor track)
@@ -53,37 +36,42 @@ struct CabbageRSlider : virtual Knob, FramebufferWidget
 
 	void draw(NVGcontext *vg) override 
 	{	
-		const int centerx = box.size.x/2.f;
-		const int centery = box.size.y/2.f;
-		const int innerSize = box.size.x*.9f;
+		const int centerx = box.size.x/3.f + box.size.x/6.f;
+		const int centery = box.size.y/3.f;
+		const int innerSize = box.size.x*.6f;
 		const int radius = innerSize/2;
 		Widget::draw(vg);
+		nvgBeginPath(vg);
+		nvgRect(vg, 0, 0, box.size.x, box.size.y);
+		nvgFillColor(vg, nvgRGBA(255, 9, 0, 255));
+		nvgFill(vg);
 
+		//pie segment
 		nvgBeginPath(vg);
 		nvgMoveTo(vg, centerx, centery);
 		nvgArc(vg, centerx, centery, radius, (NVG_PI / 1.5), (NVG_PI / 1.5) + ((NVG_PI* 1.70) * value/1000.f), NVG_CW);   // from angle 45~270
 		nvgLineTo(vg, centerx, centery);
 		nvgFillColor(vg, tracker);
 		nvgFill(vg);
-
-		nvgBeginPath(vg);
-					
 		//outer circle
-		nvgCircle(vg, box.size.x/2.f, box.size.x/2.f, innerSize/2.f);
+		nvgBeginPath(vg);					
+		nvgCircle(vg, centerx, centery, radius);
 		nvgStrokeWidth(vg, 1);
 		nvgStrokeColor(vg, outline);
 		nvgStroke(vg);
 		//innerCircle
 		nvgBeginPath(vg);
-		nvgCircle(vg, box.size.x/2.f, box.size.x/2.f, (innerSize/2.f) * .6f);
+		nvgCircle(vg, centerx, centery, radius * .6f);
 		nvgFillColor(vg, inner);
 		nvgFill(vg);
-		// nvgBeginPath(vg);
-		// nvgCircle(vg, box.size.x/2, box.size.x/2, box.size.x/2);
-		// nvgFillColor(vg, thumbTracker);
-		// nvgFill(vg);
-		//Widget::draw(vg);
-		//cout << value << "\n";
+		//text
+		nvgBeginPath(vg);
+		nvgFontSize(vg, textHeight);
+		nvgFontFaceId(vg, font->handle);
+		nvgTextLetterSpacing(vg, -2);
+		nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
+		nvgText(vg, 0, box.size.y-textHeight, "HELLO", NULL);
+		nvgFill(vg);
 	}
 	
 
@@ -125,7 +113,7 @@ struct CabbageLabel : Widget
 		box.size = size;
 		height = size.y;
 		strncpy(text, labelText, sizeof(text));
-		font = Font::load(assetPlugin(plugin, "res/DejaVuSansMono.ttf"));
+		font = Font::load(assetPlugin(plugin, "res/Vera-Bold.ttf"));
 	}
 
     void setBackgroundColour(int r, int g, int b, int a)

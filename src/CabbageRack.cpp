@@ -156,24 +156,12 @@ MyModuleWidget::MyModuleWidget()
 		{
 			if(control.type == "rslider")
 			{
-				createRSliderSVG(plugin->path,  control.bounds[Bounds::width], 
-												control.bounds[Bounds::height], 
-								createRGBString(control.outlineColour[Colour::r],
-												control.outlineColour[Colour::g],
-												control.outlineColour[Colour::b]), 
-								createRGBString(control.colour[Colour::r],
-												control.colour[Colour::g],
-												control.colour[Colour::b]), 
-								createRGBString(control.trackerColour[Colour::r],
-												control.trackerColour[Colour::g],
-												control.trackerColour[Colour::b]));
-
-				ParamWidget* widget = createParam<CabbageRSlider>(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]), module, controlIndex, 
+				ParamWidget* widget = createParam<CabbageRotarySlider>(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]), module, controlIndex, 
 														control.range[Range::min], 
 														control.range[Range::max],
 														control.range[Range::value]);
-				dynamic_cast<CabbageRSlider*>(widget)->box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
-				dynamic_cast<CabbageRSlider*>(widget)->setColours(nvgRGBA(control.outlineColour[Colour::r],
+				dynamic_cast<CabbageRotarySlider*>(widget)->box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
+				dynamic_cast<CabbageRotarySlider*>(widget)->setColours(nvgRGBA(control.outlineColour[Colour::r],
 																			control.outlineColour[Colour::g],
 																			control.outlineColour[Colour::b],
 																			control.outlineColour[Colour::a]),
@@ -213,5 +201,5 @@ MyModuleWidget::MyModuleWidget()
 	addOutput(createOutput<PJ301MPort>(Vec(46, 275), module, CabbageRack::OUTPUT1));
 	addOutput(createOutput<PJ301MPort>(Vec(16, 275), module, CabbageRack::OUTPUT2));
 
-	addChild(createLight<MediumLight<RedLight>>(Vec(41, 59), module, CabbageRack::BLINK_LIGHT));
+	//addChild(createLight<MediumLight<RedLight>>(Vec(41, 59), module, CabbageRack::BLINK_LIGHT));
 }
