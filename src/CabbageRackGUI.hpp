@@ -15,7 +15,7 @@ using namespace std;
 std::string centered( std::string const& original, int targetSize )
 {
     assert( targetSize >= 0 );
-    int padding = targetSize - checked_cast<int>( original.size() );
+    int padding = targetSize - int( original.size() );
     return padding > 0
         ? std::string( padding / 2, ' ' ) 
             + original
@@ -47,8 +47,8 @@ struct CabbageRotarySlider : virtual Knob, FramebufferWidget
 
 	void draw(NVGcontext *vg) override 
 	{	
-		const int centerx = box.size.x/3.f + box.size.x/6.f;
-		const int centery = box.size.y/3.f;
+		const int centerx = box.size.x/2.75f + box.size.x/6.5f;
+		const int centery = box.size.y/2.75f;
 		const int innerSize = box.size.x*.6f;
 		const int radius = innerSize/2;
 		Widget::draw(vg);
@@ -81,7 +81,7 @@ struct CabbageRotarySlider : virtual Knob, FramebufferWidget
 		nvgFontFaceId(vg, font->handle);
 		nvgTextLetterSpacing(vg, -2);
 		nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
-		nvgText(vg, 0, box.size.y-textHeight, "HELLO", NULL);
+		nvgText(vg, 0, box.size.y-5, "HELLO", NULL);
 		nvgFill(vg);
 	}
 	
