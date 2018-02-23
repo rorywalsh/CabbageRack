@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <fstream>
 
-
+#define VERSION "1.0"
 
 enum Range {
 	min, max, value	
@@ -42,9 +42,10 @@ struct MyModuleWidget : ModuleWidget {
 struct CabbageControl
 {
 	float range[3] = {0, 1, 0};
-	int colour[4] = {0,0,0,255};
-	int trackerColour[4] = {0,0,0,255};
-	int outlineColour[4] = {0,0,0,255};
+	NVGcolor colour = nvgRGBA(20, 20, 20, 255);
+	NVGcolor trackerColour = nvgRGBA(147, 210, 0, 255);
+	NVGcolor outlineColour = nvgRGBA(25, 25, 25, 255);
+	
 	int bounds[4] = {0,0,100,100};
 	int width, height;
 	string channel, text, label, caption, type;
@@ -107,53 +108,60 @@ static vector<CabbageControl> getCabbageControlVector(string csdFile)
 
 			if (line.find("colour(") != std::string::npos)
 			{
+				int colourArray[4] = {0,0,0,255};
 				string colour = line.substr(line.find("colour(") + 7);
 				colour = colour.substr(0, colour.find(")"));
 				char *p = strtok(&colour[0u], ",");
 				int argCount = 0;
 				while (p)
 				{
-					cabbageCtrl.colour[argCount] = atof(p);
+					colourArray[argCount] = atof(p);
 					argCount++;
 					//not handling increment or log sliders yet
 					if (argCount == 4)
 						break;
 					p = strtok(NULL, ",");
 				}
+
+				cabbageCtrl.colour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
 			}
 
 			if (line.find("outlinecolour(") != std::string::npos)
 			{
+				int outlineColourArray[4] = {0,0,0,255};
 				string colour = line.substr(line.find("outlinecolour(") + 14);
 				colour = colour.substr(0, colour.find(")"));
 				char *p = strtok(&colour[0u], ",");
 				int argCount = 0;
 				while (p)
 				{
-					cabbageCtrl.outlineColour[argCount] = atof(p);
+					outlineColourArray[argCount] = atof(p);
 					argCount++;
-					//not handling increment or log sliders yet
 					if (argCount == 4)
 						break;
 					p = strtok(NULL, ",");
 				}
+
+				cabbageCtrl.outlineColour = nvgRGBA(outlineColourArray[0], outlineColourArray[1], outlineColourArray[2], outlineColourArray[3]);
 			}
 
 			if (line.find("trackercolour(") != std::string::npos)
 			{
+				int trackerColourArray[4] = {0,0,0,255};
 				string colour = line.substr(line.find("trackercolour(") + 14);
 				colour = colour.substr(0, colour.find(")"));
 				char *p = strtok(&colour[0u], ",");
 				int argCount = 0;
 				while (p)
 				{
-					cabbageCtrl.trackerColour[argCount] = atof(p);
+					trackerColourArray[argCount] = atof(p);
 					argCount++;
-					//not handling increment or log sliders yet
 					if (argCount == 4)
 						break;
 					p = strtok(NULL, ",");
 				}
+
+				cabbageCtrl.trackerColour = nvgRGBA(trackerColourArray[0], trackerColourArray[1], trackerColourArray[2], trackerColourArray[3]);
 			}
 
 			if (line.find("bounds(") != std::string::npos)
@@ -166,7 +174,6 @@ static vector<CabbageControl> getCabbageControlVector(string csdFile)
 				{
 					cabbageCtrl.bounds[argCount] = atof(p);
 					argCount++;
-					//not handling increment or log sliders yet
 					if (argCount == 4)
 						break;
 					p = strtok(NULL, ",");
@@ -190,7 +197,6 @@ static vector<CabbageControl> getCabbageControlVector(string csdFile)
 				{
 					cabbageCtrl.range[argCount] = atof(p);
 					argCount++;
-					//not handling increment or log sliders yet
 					if (argCount == 3)
 						break;
 					p = strtok(NULL, ",");

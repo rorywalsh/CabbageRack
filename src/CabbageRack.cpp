@@ -15,7 +15,8 @@ struct CabbageRack : Module {
 		NUM_PARAMS
 	};
 	enum InputIds {
-		PITCH_INPUT,
+		INPUT1,
+		INPUT2,
 		NUM_INPUTS
 	};
 	enum OutputIds {
@@ -54,7 +55,9 @@ struct CabbageRack : Module {
 		csound->SetHostImplementedAudioIO(1, 0);
 		csound->SetHostData(this);
 
-		compileError = csound->Compile("./plugins/CabbageRack/src/test.csd");
+		const string csdFileName(plugin->path+ "/" +plugin->path.substr(plugin->path.find("/", 3)+1)+".csd");
+		compileError = csound->Compile(csdFileName.c_str());
+
 		if(compileError != 0)
 			cout << "Csound could not compile" << endl;
 		else
@@ -65,7 +68,7 @@ struct CabbageRack : Module {
 			csScale = csound->Get0dBFS();
 		}
 
-		cabbageControls = getCabbageControlVector("./plugins/CabbageRack/src/test.csd");
+		cabbageControls = getCabbageControlVector(csdFileName);
 		numControlChannels = getNumberOfControlChannels(cabbageControls);
 
 		cout << "Number of Control Channels is " << numControlChannels << "\n";
@@ -100,41 +103,41 @@ struct CabbageRack : Module {
 
 
 
-void CabbageRack::step() {
-		
-	if(kIndex == ksmps)
-	{
-		kIndex = 0;
-		compileError = csound->PerformKsmps();
-		int controlIndex = 0;
-		for( int i = 0 ; i < (int)cabbageControls.size();i++)
+void CabbageRack::step() 
+{
+	if(compileError==0)
+	{		
+		if(kIndex == ksmps)
 		{
-			if(cabbageControls[i].hasChannel)
+			kIndex = 0;
+			compileError = csound->PerformKsmps();
+			int controlIndex = 0;
+			for( int i = 0 ; i < (int)cabbageControls.size();i++)
 			{
-				csound->SetChannel(cabbageControls[i].channel.c_str(), params[controlIndex+1].value);
-				controlIndex++;
-			}				
+				if(cabbageControls[i].hasChannel)
+				{
+					csound->SetChannel(cabbageControls[i].channel.c_str(), params[controlIndex+1].value);
+					controlIndex++;
+				}				
+			}
+		}
+		
+		if (compileError == 0)
+		{
+			spin[kIndex] = inputs[INPUT1].value * 0.1;
+			spin[kIndex+1] = inputs[INPUT2].value * 0.1;
+			
+			outputs[OUTPUT1].value = (spout[kIndex] / csScale);
+			outputs[OUTPUT2].value = (spout[kIndex+1] / csScale);
+			kIndex+=2;
 		}
 	}
-
-	
-	if (compileError == 0)
-	{
-		samplePos = kIndex*numOutputs;
-
-		for (int channel = 0; channel < numOutputs; ++channel)
-		{			
-			outputs[channel].value = (spout[samplePos] / csScale);
-			++kIndex;
-		}
-	}
-
 	//Blink light at 1Hz
-	float deltaTime = 1.0 / engineGetSampleRate();
-	blinkPhase += deltaTime;
-	if (blinkPhase >= 1.0)
-		blinkPhase -= 1.0;
-	lights[BLINK_LIGHT].value = (blinkPhase < 0.5) ? 1.0 : 0.0;
+	// float deltaTime = 1.0 / engineGetSampleRate();
+	// blinkPhase += deltaTime;
+	// if (blinkPhase >= 1.0)
+	// 	blinkPhase -= 1.0;
+	// lights[BLINK_LIGHT].value = (blinkPhase < 0.5) ? 1.0 : 0.0;
 }
 
 
@@ -143,12 +146,17 @@ MyModuleWidget::MyModuleWidget()
 	CabbageRack *module = new CabbageRack();
 	setModule(module);
 	int controlIndex = 0;
+	int width, height, centre;
+	
 	for( auto control : module->cabbageControls)
 	{
 		if(control.type == "form")
 		{
 			box.size = Vec(control.width, control.height);
-			CabbageForm *form = new CabbageForm(box.size, control.colour[Colour::r], control.colour[Colour::g], control.colour[Colour::b], control.colour[Colour::a]);
+			CabbageForm *form = new CabbageForm(box.size, control.colour);
+			width = box.size.x;
+			height = box.size.y;
+			centre = width/2;
 			addChild(form);
 		}
 
@@ -160,20 +168,14 @@ MyModuleWidget::MyModuleWidget()
 														control.range[Range::min], 
 														control.range[Range::max],
 														control.range[Range::value]);
-				dynamic_cast<CabbageRotarySlider*>(widget)->box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
-				dynamic_cast<CabbageRotarySlider*>(widget)->setColours(nvgRGBA(control.outlineColour[Colour::r],
-																			control.outlineColour[Colour::g],
-																			control.outlineColour[Colour::b],
-																			control.outlineColour[Colour::a]),
-																  	nvgRGBA(control.colour[Colour::r],
-																			control.colour[Colour::g],
-																			control.colour[Colour::b],
-																			control.colour[Colour::a]),
-																 	nvgRGBA(control.trackerColour[Colour::r],
-																			control.trackerColour[Colour::g],
-																			control.trackerColour[Colour::b],
-																			control.trackerColour[Colour::a]));
-				addParam(widget);
+				if(CabbageRotarySlider* slider = dynamic_cast<CabbageRotarySlider*>(widget))
+				{
+					slider->box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
+					slider->setColours(control.outlineColour, control.colour, control.trackerColour);
+					slider->setText(control.text);
+					addParam(widget);
+				}
+				
 			}
 		}	
 
@@ -195,11 +197,27 @@ MyModuleWidget::MyModuleWidget()
 	addChild(createScrew<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 	addChild(createScrew<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
+	//inputs
+	for ( int i = 0 ; i < 2 ; i++)
+	{
+		Port *input = createInput<CabbagePort>(Vec(centre - (i==0 ? 65 : 32), height-55), module, (i==0 ? CabbageRack::INPUT1 : CabbageRack::INPUT2));
+		if(CabbagePort* port = dynamic_cast<CabbagePort*>(input))
+		{
+			port->setText(i==0 ? "In 1" : "In 2");
+			addInput(port);
+		}
+	}
 
-	addInput(createInput<PJ301MPort>(Vec(33, 186), module, CabbageRack::PITCH_INPUT));
-
-	addOutput(createOutput<PJ301MPort>(Vec(46, 275), module, CabbageRack::OUTPUT1));
-	addOutput(createOutput<PJ301MPort>(Vec(16, 275), module, CabbageRack::OUTPUT2));
-
+	//outputs
+	for ( int i = 0 ; i < 2 ; i++)
+	{
+		Port *output = createOutput<CabbagePort>(Vec(centre + (i==0 ? 2 : 35), height-55), module, (i==0 ? CabbageRack::OUTPUT1 : CabbageRack::OUTPUT2));
+		if(CabbagePort* port = dynamic_cast<CabbagePort*>(output))
+		{
+			port->setText(i==0 ? "Out 1" : "Out 2");
+			addOutput(port);
+		}
+	}
+	
 	//addChild(createLight<MediumLight<RedLight>>(Vec(41, 59), module, CabbageRack::BLINK_LIGHT));
 }
