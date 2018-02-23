@@ -10,6 +10,7 @@
 
 #define VERSION "1.0"
 
+
 enum Range {
 	min, max, value	
 };
@@ -45,6 +46,8 @@ struct CabbageControl
 	NVGcolor colour = nvgRGBA(20, 20, 20, 255);
 	NVGcolor trackerColour = nvgRGBA(147, 210, 0, 255);
 	NVGcolor outlineColour = nvgRGBA(25, 25, 25, 255);
+	NVGcolor fontColour = nvgRGBA(255, 255, 255, 255);
+	
 	
 	int bounds[4] = {0,0,100,100};
 	int width, height;
@@ -71,11 +74,13 @@ static vector<CabbageControl> getCabbageControlVector(string csdFile)
 		if (i != std::string::npos)
 			newLine.erase(i, control.length());
 
+		
 		if (control.find("slider") != std::string::npos ||
 			control.find("button") != std::string::npos ||
 			control.find("checkbox") != std::string::npos ||
 			control.find("groupbox") != std::string::npos ||
-			control.find("form") != std::string::npos)
+			control.find("form") != std::string::npos ||
+			control.find("label") != std::string::npos)
 		{
 			CabbageControl cabbageCtrl;
 			cabbageCtrl.type = control;
@@ -162,6 +167,25 @@ static vector<CabbageControl> getCabbageControlVector(string csdFile)
 				}
 
 				cabbageCtrl.trackerColour = nvgRGBA(trackerColourArray[0], trackerColourArray[1], trackerColourArray[2], trackerColourArray[3]);
+			}
+
+			if (line.find("fontcolour(") != std::string::npos)
+			{
+				int colourArray[4] = {0,0,0,255};
+				string colour = line.substr(line.find("fontcolour(") + 11);
+				colour = colour.substr(0, colour.find(")"));
+				char *p = strtok(&colour[0u], ",");
+				int argCount = 0;
+				while (p)
+				{
+					colourArray[argCount] = atof(p);
+					argCount++;
+					if (argCount == 4)
+						break;
+					p = strtok(NULL, ",");
+				}
+
+				cabbageCtrl.fontColour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
 			}
 
 			if (line.find("bounds(") != std::string::npos)

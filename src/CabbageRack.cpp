@@ -159,6 +159,15 @@ MyModuleWidget::MyModuleWidget()
 			centre = width/2;
 			addChild(form);
 		}
+		else if(control.type == "label")
+		{
+			CabbageLabel *label = new CabbageLabel(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]),
+												   Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]), 
+												   control.text);
+			//label->setLabelColour(control.fontColour);
+			label->setBackgroundColour(control.colour);
+			addChild(label);
+		}
 
 		else if(control.hasChannel)
 		{
@@ -174,8 +183,22 @@ MyModuleWidget::MyModuleWidget()
 					slider->setColours(control.outlineColour, control.colour, control.trackerColour);
 					slider->setText(control.text);
 					addParam(widget);
-				}
-				
+				}				
+			}
+			
+			else if(control.type == "checkbox")
+			{
+				ParamWidget* widget = createParam<CabbageCheckbox>(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]), module, controlIndex, 
+														control.range[Range::min], 
+														control.range[Range::max],
+														control.range[Range::value]);
+				if(CabbageCheckbox* checkbox = dynamic_cast<CabbageCheckbox*>(widget))
+				{
+					checkbox->box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
+					//checkbox->setColours(control.outlineColour, control.colour, control.trackerColour);
+					checkbox->setText(control.text);
+					addParam(widget);
+				}				
 			}
 		}	
 
@@ -187,10 +210,8 @@ MyModuleWidget::MyModuleWidget()
 	// label->setLabelColour(255, 0, 255, 255);
 	// label->setBackgroundColour(0, 0, 0, 255);
 	// addChild(label);
-
-	//CabbageRSlider *slider = new CabbageRSlider(Vec(20, 200), Vec(50, 50), " Test");
-	//slider->setLabelColour(255, 0, 255, 255);
-	//slider->setBackgroundColour(0, 0, 0, 255);
+	//addParam(createParam<CabbageCheckbox>(Vec(10, 100),module, 1, 0.f, 1.f, 1.f));
+	
 
 	addChild(createScrew<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 	addChild(createScrew<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
