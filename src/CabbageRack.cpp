@@ -68,18 +68,8 @@ struct CabbageRack : Module {
 			csScale = csound->Get0dBFS();
 		}
 
-		cabbageControls = getCabbageControlVector(csdFileName);
-		numControlChannels = getNumberOfControlChannels(cabbageControls);
-
-		cout << "Number of Control Channels is " << numControlChannels << "\n";
-		for (auto channel : cabbageControls)
-		{
-			cout << channel.type << "\n";
-			cout << channel.channel << "\n";
-			cout << channel.range[Range::min] << "\n";
-			cout << channel.range[Range::max] << "\n";
-			cout << channel.range[Range::value] << "\n";
-		}
+		cabbageControls = CabbageParser::getCabbageControlVector(csdFileName);
+		numControlChannels = CabbageParser::getNumberOfControlChannels(cabbageControls);
     }
 
 	CabbageRack() : 
@@ -132,12 +122,6 @@ void CabbageRack::step()
 			kIndex+=2;
 		}
 	}
-	//Blink light at 1Hz
-	// float deltaTime = 1.0 / engineGetSampleRate();
-	// blinkPhase += deltaTime;
-	// if (blinkPhase >= 1.0)
-	// 	blinkPhase -= 1.0;
-	// lights[BLINK_LIGHT].value = (blinkPhase < 0.5) ? 1.0 : 0.0;
 }
 
 
@@ -159,14 +143,23 @@ MyModuleWidget::MyModuleWidget()
 			centre = width/2;
 			addChild(form);
 		}
+
 		else if(control.type == "label")
 		{
 			CabbageLabel *label = new CabbageLabel(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]),
 												   Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]), 
-												   control.text);
-			//label->setLabelColour(control.fontColour);
-			label->setBackgroundColour(control.colour);
+												   control.text[0]);
+			label->setColours(control.fontColour, control.colour);
 			addChild(label);
+		}
+
+		else if(control.type == "groupbox")
+		{
+			CabbageGroupbox *group = new CabbageGroupbox(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]),
+												   Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]), 
+												   control.text[0]);
+			group->setColours(control.colour, control.outlineColour, control.fontColour);
+			addChild(group);
 		}
 
 		else if(control.hasChannel)
@@ -180,8 +173,8 @@ MyModuleWidget::MyModuleWidget()
 				if(CabbageRotarySlider* slider = dynamic_cast<CabbageRotarySlider*>(widget))
 				{
 					slider->box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
-					slider->setColours(control.outlineColour, control.colour, control.trackerColour);
-					slider->setText(control.text);
+					slider->setColours(control.outlineColour, control.colour, control.trackerColour, control.textColour);
+					slider->setText(control.text[0]);
 					addParam(widget);
 				}				
 			}
@@ -195,8 +188,23 @@ MyModuleWidget::MyModuleWidget()
 				if(CabbageCheckbox* checkbox = dynamic_cast<CabbageCheckbox*>(widget))
 				{
 					checkbox->box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
-					//checkbox->setColours(control.outlineColour, control.colour, control.trackerColour);
-					checkbox->setText(control.text);
+					checkbox->setColours(control.chkColour0, control.chkColour1, control.fontColour);
+					checkbox->setText(control.text[0]);
+					addParam(widget);
+				}				
+			}
+
+			else if(control.type == "button")
+			{
+				ParamWidget* widget = createParam<CabbageButton>(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]), module, controlIndex, 
+														control.range[Range::min], 
+														control.range[Range::max],
+														control.range[Range::value]);
+				if(CabbageButton* button = dynamic_cast<CabbageButton*>(widget))
+				{
+					button->box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
+					button->setColours(control.butColour0, control.butColour1, control.fontColour);
+					button->setText(control.text[0], control.text[1]);
 					addParam(widget);
 				}				
 			}
