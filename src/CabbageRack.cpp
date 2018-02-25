@@ -1,5 +1,5 @@
 #include "Cabbage.hpp"
-#include "CabbageRackGUI.hpp"
+#include "CabbageRackWidgets.hpp"
 
 using namespace std;
 
@@ -10,10 +10,7 @@ void MessageCallback(CSOUND* cs, int attr, const char *format, va_list valist)
 }
 
 struct CabbageRack : Module {
-	enum ParamIds {
-		PITCH_PARAM,
-		NUM_PARAMS
-	};
+
 	enum InputIds {
 		INPUT1,
 		INPUT2,
@@ -70,14 +67,16 @@ struct CabbageRack : Module {
 
 		cabbageControls = CabbageParser::getCabbageControlVector(csdFileName);
 		numControlChannels = CabbageParser::getNumberOfControlChannels(cabbageControls);
+		
     }
 
 	CabbageRack() : 
-	Module(numControlChannels+1, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS),
+	Module(1, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS),
 	numInputs(NUM_INPUTS),
 	numOutputs(NUM_OUTPUTS)
 	{
-		createAndCompileCsound();                                     
+		createAndCompileCsound();                
+		params.resize(numControlChannels);                   
         csound->SetMessageCallback(MessageCallback);
 	}
 
@@ -102,11 +101,12 @@ void CabbageRack::step()
 			kIndex = 0;
 			compileError = csound->PerformKsmps();
 			int controlIndex = 0;
+			 
 			for( int i = 0 ; i < (int)cabbageControls.size();i++)
 			{
 				if(cabbageControls[i].hasChannel)
 				{
-					csound->SetChannel(cabbageControls[i].channel.c_str(), params[controlIndex+1].value);
+					csound->SetChannel(cabbageControls[i].channel.c_str(), params[controlIndex].value);
 					controlIndex++;
 				}				
 			}
@@ -114,12 +114,12 @@ void CabbageRack::step()
 		
 		if (compileError == 0)
 		{
-			spin[kIndex] = inputs[INPUT1].value * 0.1;
-			spin[kIndex+1] = inputs[INPUT2].value * 0.1;
-			
-			outputs[OUTPUT1].value = (spout[kIndex] / csScale);
-			outputs[OUTPUT2].value = (spout[kIndex+1] / csScale);
-			kIndex+=2;
+			const int pos = kIndex*numOutputs;
+			spin[pos] = inputs[INPUT1].value * 0.1;
+			spin[pos+1] = inputs[INPUT2].value * 0.1;			
+			outputs[OUTPUT1].value = (spout[pos] / csScale)*10;
+			outputs[OUTPUT2].value = (spout[pos+1] / csScale)*10;
+			kIndex++;
 		}
 	}
 }
@@ -136,90 +136,39 @@ MyModuleWidget::MyModuleWidget()
 	{
 		if(control.type == "form")
 		{
+			addChild(new CabbageForm(control));
 			box.size = Vec(control.width, control.height);
-			CabbageForm *form = new CabbageForm(box.size, control.colour);
 			width = box.size.x;
 			height = box.size.y;
-			centre = width/2;
-			addChild(form);
+			centre = width/2;			
 		}
 
 		else if(control.type == "label")
-		{
-			CabbageLabel *label = new CabbageLabel(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]),
-												   Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]), 
-												   control.text[0]);
-			label->setColours(control.fontColour, control.colour);
-			addChild(label);
-		}
+			addChild(new CabbageLabel(control));
 
 		else if(control.type == "groupbox")
-		{
-			CabbageGroupbox *group = new CabbageGroupbox(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]),
-												   Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]), 
-												   control.text[0]);
-			group->setColours(control.colour, control.outlineColour, control.fontColour);
-			addChild(group);
-		}
+			addChild(new CabbageGroupbox(control));
+
+		else if(control.type == "image")
+			addChild(new CabbageImage(control));
 
 		else if(control.hasChannel)
 		{
 			if(control.type == "rslider")
-			{
-				ParamWidget* widget = createParam<CabbageRotarySlider>(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]), module, controlIndex, 
-														control.range[Range::min], 
-														control.range[Range::max],
-														control.range[Range::value]);
-				if(CabbageRotarySlider* slider = dynamic_cast<CabbageRotarySlider*>(widget))
-				{
-					slider->box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
-					slider->setColours(control.outlineColour, control.colour, control.trackerColour, control.textColour);
-					slider->setText(control.text[0]);
-					addParam(widget);
-				}				
-			}
-			
-			else if(control.type == "checkbox")
-			{
-				ParamWidget* widget = createParam<CabbageCheckbox>(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]), module, controlIndex, 
-														control.range[Range::min], 
-														control.range[Range::max],
-														control.range[Range::value]);
-				if(CabbageCheckbox* checkbox = dynamic_cast<CabbageCheckbox*>(widget))
-				{
-					checkbox->box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
-					checkbox->setColours(control.chkColour0, control.chkColour1, control.fontColour);
-					checkbox->setText(control.text[0]);
-					addParam(widget);
-				}				
-			}
+				addParam(new CabbageRotarySlider(control, module, controlIndex));			
 
 			else if(control.type == "button")
-			{
-				ParamWidget* widget = createParam<CabbageButton>(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]), module, controlIndex, 
-														control.range[Range::min], 
-														control.range[Range::max],
-														control.range[Range::value]);
-				if(CabbageButton* button = dynamic_cast<CabbageButton*>(widget))
-				{
-					button->box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
-					button->setColours(control.butColour0, control.butColour1, control.fontColour);
-					button->setText(control.text[0], control.text[1]);
-					addParam(widget);
-				}				
-			}
+				addParam(new CabbageButton(control, module, controlIndex));	
+			
+			else if(control.type == "checkbox")
+				addParam(new CabbageCheckbox(control, module, controlIndex));	
+
+			controlIndex++;					
 		}	
 
-		controlIndex++;	
+			
+		
 	}
-	
-
-	// CabbageLabel *label = new CabbageLabel(Vec(20, 20), Vec(100, 20), " Test");
-	// label->setLabelColour(255, 0, 255, 255);
-	// label->setBackgroundColour(0, 0, 0, 255);
-	// addChild(label);
-	//addParam(createParam<CabbageCheckbox>(Vec(10, 100),module, 1, 0.f, 1.f, 1.f));
-	
 
 	addChild(createScrew<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 	addChild(createScrew<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
