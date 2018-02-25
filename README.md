@@ -19,7 +19,7 @@ CabbageRack comes with a simple example file. In order to create an new module s
 
 #### Notes:
 - Modules have two inputs and two outputs. All Csound instrument must use `nchnls=2`.  
-- Currently only `rslider`, `label` , `groupbox` and `checkbox` widgets are supported, with reduced functionality. Only the most basic identifiers are supported. 
+- Currently only `rslider`, `label` , `groupbox`, `checkbox`, `button` and `image` widgets are supported, with reduced functionality. Only the most basic identifiers are supported `image` does support loading os SVG files using the `file()` identifier.  
 - Slider only take min, max and value parameters, increment, and skew factor are not yet supported
 - Modules are named by their folder, which should contain a .csd file of the same name, therefore, no whitespaces can be used. Use `_` or `-` instead.  
 - Colours are `RGBA` only, there is no support for colour names. 
