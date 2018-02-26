@@ -10,6 +10,7 @@
 #include <iomanip>
 #include "CabbageParser.hpp"
 
+extern Plugin *plugin;
 using namespace std;
 
 //========================================================
@@ -72,7 +73,6 @@ struct CabbageForm : Widget
 	
     void draw(NVGcontext *vg) override 
     {
-		Widget::draw(vg);
 		nvgBeginPath(vg);
         nvgRect(vg, 0, 0, box.size.x, box.size.y);
         nvgFillColor(vg, colour);
@@ -90,6 +90,8 @@ struct CabbageRotarySlider : virtual Knob, FramebufferWidget
 	std::shared_ptr<Font> font;
 	string text;
 	int textHeight = 12;
+	bool firstDraw = true;
+	float currentValue = 0;
 
 	CabbageRotarySlider(CabbageControl control, Module *mod, int id)
 	{
@@ -97,8 +99,10 @@ struct CabbageRotarySlider : virtual Knob, FramebufferWidget
 		module = mod;
 		box.pos = Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]);
 		box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
+		
 		setLimits(control.range[Range::min], control.range[Range::max]);
 		setDefaultValue(control.range[Range::value]);
+		currentValue = value;
 
 		font = Font::load(assetPlugin(plugin, "res/Vera-Bold.ttf"));
 		outline = control.outlineColour;
@@ -106,20 +110,20 @@ struct CabbageRotarySlider : virtual Knob, FramebufferWidget
 		tracker = control.trackerColour;
 		textColour = control.textColour;
 		text = control.text[0];
-
+		FramebufferWidget::dirty = false;
 	}
 
 	void draw(NVGcontext *vg) override 
 	{	
+		
 		const int centerx = box.size.x/2.65f + box.size.x/7.5f;
 		const int centery = box.size.y/2.65f;
 		const int innerSize = box.size.x*.6f;
 		const int radius = innerSize/2;
-		Widget::draw(vg);
 		//pie segment
 		nvgBeginPath(vg);
 		nvgMoveTo(vg, centerx, centery);
-		nvgArc(vg, centerx, centery, radius, (NVG_PI / 1.5), (NVG_PI / 1.5) + ((NVG_PI* 1.70) * value/1000.f), NVG_CW);   // from angle 45~270
+		nvgArc(vg, centerx, centery, radius, (NVG_PI / 1.5), (NVG_PI / 1.5) + ((NVG_PI* 1.67) * value/maxValue), NVG_CW);
 		nvgLineTo(vg, centerx, centery);
 		nvgFillColor(vg, tracker);
 		nvgFill(vg);
@@ -150,6 +154,7 @@ struct CabbageRotarySlider : virtual Knob, FramebufferWidget
 		nvgTextAlign(vg, NVG_ALIGN_TOP|NVG_ALIGN_CENTER);
 		nvgTextBox(vg, 0, box.size.y-14, box.size.x, text.c_str(), NULL);
 		nvgFill(vg);
+
 	}
 };
 
@@ -190,7 +195,6 @@ struct CabbageButton : virtual Switch, FramebufferWidget {
 
 	void draw(NVGcontext *vg) override 
 	{
-		Widget::draw(vg);
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, 0, 0, box.size.x-int(value), box.size.y-int(value), 4);
 		nvgFillColor(vg, nvgRGBA(80, 80, 80, 255));
@@ -256,7 +260,6 @@ struct CabbageCheckbox : virtual Switch, FramebufferWidget {
 
 	void draw(NVGcontext *vg) override 
 	{
-		Widget::draw(vg);
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, 0, 0, box.size.y, box.size.y, 2);
 		nvgFillColor(vg, nvgRGBA(20, 20, 20, 255));
@@ -283,7 +286,7 @@ struct CabbageCheckbox : virtual Switch, FramebufferWidget {
 //===================================================================
 // Groupbox class
 //===================================================================
-struct CabbageGroupbox : Widget 
+struct CabbageGroupbox : FramebufferWidget 
 {
 	NVGcolor colour, fontColour, outlineColour;
 	std::shared_ptr<Font> font;
@@ -302,7 +305,6 @@ struct CabbageGroupbox : Widget
 
     void draw(NVGcontext *vg) override 
     {
-		Widget::draw(vg);
 		nvgBeginPath(vg);
         nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 4);
         nvgStrokeWidth(vg, 1);
@@ -332,7 +334,7 @@ struct CabbageGroupbox : Widget
 //===================================================================
 // Label class
 //===================================================================
-struct CabbageLabel : Widget 
+struct CabbageLabel : FramebufferWidget 
 {
 	std::shared_ptr<Font> font;
 	NVGcolor labelColour, backgroundColour;
@@ -349,8 +351,8 @@ struct CabbageLabel : Widget
 		labelColour = control.fontColour;
 	}
 
-	void draw(NVGcontext *vg) override {
-		Widget::draw(vg);
+	void draw(NVGcontext *vg) override 
+	{
 		nvgBeginPath(vg);
         nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 3);
         nvgFillColor(vg, backgroundColour);
@@ -369,7 +371,7 @@ struct CabbageLabel : Widget
 //===================================================================
 // Image class
 //===================================================================
-struct CabbageImage : Widget 
+struct CabbageImage : FramebufferWidget 
 {
 	NVGcolor outlineColour, backgroundColour;
 	string text;
@@ -397,7 +399,6 @@ struct CabbageImage : Widget
 		}
 		else
 		{
-			Widget::draw(vg);
 			nvgBeginPath(vg);
     		nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, corners);
         	nvgFillColor(vg, backgroundColour);
@@ -413,47 +414,49 @@ struct CabbagePort : Port, FramebufferWidget
 {
 	std::shared_ptr<Font> font;
 	string text;
-	CabbagePort()
-	{
-		font = Font::load(assetPlugin(plugin, "res/Vera-Bold.ttf"));
-		box.size.x = 30;
-		box.size.y = 40;
-	};
+	NVGcolor outlineColour, colour;
 
-	void setText(string portText)
+	CabbagePort(CabbageControl control,  Module *mod, int id)
 	{
-		text = portText;
-	}
+        box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
+		box.pos = Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]);;
+		module = mod;
+		portId = id;
+		type = control.type == "cvinput" ? Port::INPUT : Port::OUTPUT;
+		outlineColour = control.outlineColour;
+		colour = control.colour;
+		text = control.text[0];
+		font = Font::load(assetPlugin(plugin, "res/Vera-Bold.ttf"));
+	};
 
 	void draw(NVGcontext *vg) override
 	{
-		Widget::draw(vg);
 		nvgBeginPath(vg);
-        nvgRoundedRect(vg, 0, -5, box.size.x, box.size.y, 3);
-        nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-        nvgFill(vg);
-		nvgBeginPath(vg);
-        nvgRoundedRect(vg, 1, -4, box.size.x-2, box.size.y-2, 3);
-        nvgFillColor(vg, nvgRGBA(30, 30, 30, 255));
-        nvgFill(vg);
-		nvgClosePath(vg);
-		nvgFontSize(vg, 10);
-		nvgFontFaceId(vg, font->handle);
-		nvgTextLetterSpacing(vg, -2);
-		nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
-		nvgTextAlign(vg, NVG_ALIGN_CENTER);
-		nvgTextBox(vg, 0, 6, box.size.x, text.c_str(), NULL);
-		nvgBeginPath(vg);
-        nvgCircle(vg, 15, 20, 10);
+        // nvgRoundedRect(vg, 0, -5, box.size.x, box.size.y, 3);
+        // nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+        // nvgFill(vg);
+		// nvgBeginPath(vg);
+        // nvgRoundedRect(vg, 1, -4, box.size.x-2, box.size.y-2, 3);
+        // nvgFillColor(vg, nvgRGBA(30, 30, 30, 255));
+        // nvgFill(vg);
+		// nvgClosePath(vg);
+		// nvgFontSize(vg, 10);
+		// nvgFontFaceId(vg, font->handle);
+		// nvgTextLetterSpacing(vg, -2);
+		// nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
+		// nvgTextAlign(vg, NVG_ALIGN_CENTER);
+		// nvgTextBox(vg, 0, 6, box.size.x, text.c_str(), NULL);
+		// nvgBeginPath(vg);
+        nvgCircle(vg, box.size.x/2, box.size.y/2, 10);
         nvgFillColor(vg, nvgRGBA(80, 80, 80, 255));
 		nvgFill(vg);
 		nvgBeginPath(vg);
-        nvgCircle(vg, 15, 20, 8);
-        nvgFillColor(vg, nvgRGBA(180, 180, 180, 255));
+        nvgCircle(vg,box.size.x/2, box.size.y/2, 8);
+        nvgFillColor(vg, outlineColour);
 		nvgFill(vg);
 		nvgBeginPath(vg);
-        nvgCircle(vg, 15, 20, 7);
-        nvgFillColor(vg, nvgRGBA(10, 10, 10, 255));
+        nvgCircle(vg, box.size.x/2, box.size.y/2, 7);
+        nvgFillColor(vg, colour);
         nvgFill(vg);
 	}
 };

@@ -8,7 +8,10 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 
+using namespace rack;
+using namespace std;
 
 enum Range {
 	min, max, value	
@@ -98,6 +101,12 @@ struct CabbageControl
 		{
 			colour = nvgRGBA(20, 20, 20, 255);
 		}
+		else if(type == "cvinput" || type == "cvoutput")
+		{
+			colour = nvgRGBA(20, 20, 20, 255);
+			outlineColour = nvgRGBA(180, 180, 180, 255);
+			text.push_back(type);
+		}
 	}
 };
 
@@ -178,6 +187,8 @@ struct CabbageParser
 				control.find("groupbox") != std::string::npos ||
 				control.find("form") != std::string::npos ||
 				control.find("image") != std::string::npos ||
+				control.find("cvinput") != std::string::npos ||
+				control.find("cvoutput") != std::string::npos ||
 				control.find("label") != std::string::npos)
 			{
 				CabbageControl cabbageCtrl(control);
@@ -326,10 +337,23 @@ struct CabbageParser
 
 		for (auto channel : csndChannels)
 		{
-			if(channel.type != "form" && channel.type != "groupbox" )
-			numberOfControlChannels++;
+			if(channel.type != "form" && channel.type != "groupbox" && channel.type != "cvinput" && channel.type != "cvoutput")
+				numberOfControlChannels++;
 		}
 
 		return numberOfControlChannels;
+	}
+
+	static int getNumberOfAudioChannels(vector<CabbageControl> csndChannels, string type)
+	{
+		int numberOfAudioChannels = 0;
+
+		for (auto channel : csndChannels)
+		{
+			if(channel.type == type)
+				numberOfAudioChannels++;
+		}
+
+		return numberOfAudioChannels;
 	}
 };
