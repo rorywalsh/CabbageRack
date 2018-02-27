@@ -15,7 +15,7 @@ cvoutput bounds(100, 300, 40, 40), channel("out2")
 -n -d
 </CsOptions>
 <CsInstruments>
-ksmps   = 64
+ksmps   = 16
 nchnls  = 2     
 0dbfs   = 1   
  
@@ -29,9 +29,9 @@ kFreq = 261*pow(2.0, k1*10)
 kAmp downsamp aInAmp
  
 if kAmp > 0 then
-    a1 vco2 kAmp, kFreq+kFreq*.01
-    a2 vco2 kAmp, kFreq+kFreq*.02
-    a3 vco2 kAmp, kFreq+kFreq*.03
+    a1 oscil kAmp, kFreq+kFreq*chnget:k("detune1")
+    a2 oscil kAmp, kFreq+kFreq*chnget:k("detune2")
+    a3 oscil kAmp, kFreq+kFreq*chnget:k("detune3")
  
     chnset (a1+a2+a3)/3, "out1"
     chnset (a1+a2+a3)/3, "out2"
