@@ -1,13 +1,13 @@
 <Cabbage>
-form size(160, 380), colour(40, 40, 40)
-groupbox bounds(22, 8, 119, 232) text("Tones") colour(30, 30, 30, 255) fontcolour:0(255, 255, 255, 255) fontcolour:1(255, 255, 255, 255) ;
-rslider bounds(52, 44, 60, 60) channel("detune1") range(-1, 1, 0, 1, 0.001) text("Detune 1") 
-rslider bounds(52, 108, 60, 60) channel("detune2") range(-1, 1, 0, 1, 0.001) text("Detune 2")
-rslider bounds(52, 170, 60, 60) channel("detune3") range(-1, 1, 0, 1, 0.001) text("Detune 3")
-cvinput bounds(24, 244, 40, 40) channel("amp") text("Amp-In") 
-cvinput bounds(100, 244, 40, 40) channel("freq") text("Pitch-In") 
-cvoutput bounds(24, 292, 40, 40) channel("out1") text("Out-1") 
-cvoutput bounds(100, 292, 40, 40) channel("out2") text("Out-2") 
+form size(150, 380), colour(90, 90,90)
+groupbox bounds(16, 28, 119, 216) text("De-tuners") colour(30, 30, 30, 255)  255, 255, 255, 255)  255, 255, 255, 255)
+rslider bounds(46, 48, 60, 60) channel("detune1") range(-1, 1, 0, 1, 0.001) text("Detune 1") 
+rslider bounds(46, 112, 60, 60) channel("detune2") range(-1, 1, 0, 1, 0.001) text("Detune 2")
+rslider bounds(46, 174, 60, 60) channel("detune3") range(-1, 1, 0, 1, 0.001) text("Detune 3")
+cvinput bounds(24, 280, 40, 40) channel("amp") text("Amp-In") 
+cvinput bounds(90, 280, 40, 40) channel("freq") text("Pitch-In") 
+cvoutput bounds(24, 320, 40, 40) channel("out1") text("Out-1") 
+cvoutput bounds(90, 320, 40, 40) channel("out2") text("Out-2") 
  
 </Cabbage>
 <CsoundSynthesizer>
