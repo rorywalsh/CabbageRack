@@ -4,10 +4,10 @@ groupbox bounds(22, 8, 119, 232) text("Tones") colour(30, 30, 30, 255) fontcolou
 rslider bounds(52, 44, 60, 60) channel("detune1") range(-1, 1, 0, 1, 0.001) text("Detune 1") 
 rslider bounds(52, 108, 60, 60) channel("detune2") range(-1, 1, 0, 1, 0.001) text("Detune 2")
 rslider bounds(52, 170, 60, 60) channel("detune3") range(-1, 1, 0, 1, 0.001) text("Detune 3")
-cvinput bounds(10, 230, 40, 40), channel("in1")
-cvinput bounds(100, 230, 40, 40), channel("in2")
-cvoutput bounds(10, 300, 40, 40), channel("out1")
-cvoutput bounds(100, 300, 40, 40), channel("out2")
+cvinput bounds(24, 244, 40, 40) channel("amp") text("Amp-In") 
+cvinput bounds(100, 244, 40, 40) channel("freq") text("Pitch-In") 
+cvoutput bounds(24, 292, 40, 40) channel("out1") text("Out-1") 
+cvoutput bounds(100, 292, 40, 40) channel("out2") text("Out-2") 
  
 </Cabbage>
 <CsoundSynthesizer>
@@ -20,8 +20,8 @@ nchnls  = 2
 0dbfs   = 1   
  
 instr   1   
-aInAmp chnget "in1"
-aInFreq chnget "in2"
+aInAmp chnget "amp"
+aInFreq chnget "freq"
  
 k1 downsamp aInFreq
 kFreq = 261*pow(2.0, k1*10)

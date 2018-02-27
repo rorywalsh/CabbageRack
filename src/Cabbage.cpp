@@ -5,7 +5,11 @@
 // The plugin-wide instance of the Plugin class
 Plugin *plugin;
 
+#ifdef ARCH_WIN
+__declspec(dllexport) void init(rack::Plugin *p) {
+#else
 void init(rack::Plugin *p) {
+#endif
 	plugin = p;
 
 	// The "slug" is the unique identifier for your plugin and must never change after release, so choose wisely.
