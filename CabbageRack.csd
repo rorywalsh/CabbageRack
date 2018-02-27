@@ -1,34 +1,51 @@
 <Cabbage>
 form size(160, 380), colour(40, 40, 40)
-groupbox bounds(22, 8, 119, 232) text("Tones") colour(30, 30, 30, 255) fontcolour:0(255, 255, 255, 255) fontcolour:1(255, 255, 255, 255) 
-image bounds(22, 248, 118, 49) corners(25) 
-rslider bounds(52, 44, 60, 60) channel("freq1") range(0, 1000, 500, 1, 0.001) text("Freq. 1") 
-rslider bounds(52, 108, 60, 60) channel("freq2") range(0, 1000, 120, 1, 0.001) text("Freq. 2") 
-rslider bounds(52, 170, 60, 60) channel("freq3") range(0, 1000, 120, 1, 0.001) text("Freq. 2") 
-checkbox bounds(24, 302, 59, 22) channel("mute") text("Mute") 
+groupbox bounds(22, 8, 119, 232) text("Tones") colour(30, 30, 30, 255) fontcolour:0(255, 255, 255, 255) fontcolour:1(255, 255, 255, 255) ;
+rslider bounds(52, 44, 60, 60) channel("detune1") range(-1, 1, 0, 1, 0.001) text("Detune 1") 
+rslider bounds(52, 108, 60, 60) channel("detune2") range(-1, 1, 0, 1, 0.001) text("Detune 2")
+rslider bounds(52, 170, 60, 60) channel("detune3") range(-1, 1, 0, 1, 0.001) text("Detune 3")
+cvinput bounds(10, 230, 40, 40), channel("in1")
+cvinput bounds(100, 230, 40, 40), channel("in2")
+cvoutput bounds(10, 300, 40, 40), channel("out1")
+cvoutput bounds(100, 300, 40, 40), channel("out2")
+ 
 </Cabbage>
 <CsoundSynthesizer>
 <CsOptions>
 -n -d
 </CsOptions>
 <CsInstruments>
-ksmps   = 32
+ksmps   = 64
 nchnls  = 2     
 0dbfs   = 1   
-
-;checkbox bounds(52, 116, 60, 14)  channel("mute") value(1), text("Mute") colour:0(25, 25, 25, 255) colour:1(147, 210, 0, 255) fontcolour:0(20, 20, 20, 255) fontcolour:1(20, 20, 20, 255) 
-;
  
-
 instr   1   
-a1 oscili 1*1-chnget:k("mute"), chnget:k("freq1")
-a2 oscili 1*1-chnget:k("mute"), chnget:k("freq2")
-a3 oscili 1*1-chnget:k("mute"), chnget:k("freq3")
-outs (a1+a3)/2, (a2+a3)/2
+aInAmp chnget "in1"
+aInFreq chnget "in2"
+ 
+k1 downsamp aInFreq
+kFreq = 261*pow(2.0, k1*10)
+ 
+kAmp downsamp aInAmp
+ 
+if kAmp > 0 then
+    a1 vco2 kAmp, kFreq+kFreq*.01
+    a2 vco2 kAmp, kFreq+kFreq*.02
+    a3 vco2 kAmp, kFreq+kFreq*.03
+ 
+    chnset (a1+a2+a3)/3, "out1"
+    chnset (a1+a2+a3)/3, "out2"
+else
+    chnset a(0), "out1"
+    chnset a(0), "out2"
+ 
+endif
+ 
 endin
-
+ 
 </CsInstruments>
 <CsScore>
+f1 0 4096 10 1
 i1 0 z
 </CsScore>
 </CsoundSynthesizer>
