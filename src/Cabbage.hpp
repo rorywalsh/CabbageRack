@@ -46,16 +46,13 @@ struct CabbageRack : Module {
 		NUM_LIGHTS
 	};
 
-	// Frame<2> inBuffer[16] = {};
-	// int frame = 0;
-
     Csound* csound;
 	vector<MYFLT*> audioOutputChannels;
 	vector<MYFLT*> audioInputChannels;
     int ksmps, result, compileError; 
 	int kIndex = 0;
 	int samplePos = 0;
-    int const nchnls = 2;       // 2 inputs and 2 outputs in csd
+    int const nchnls = 2;       // 2 inputs and 2 outputs in csd, although not used..
 	float csScale = 1;
 	float phase = 0.0;
 	float blinkPhase = 0.0;
@@ -66,6 +63,5 @@ struct CabbageRack : Module {
     ~CabbageRack(){        delete csound;    }
 
 	void step() override;
-		void createAndCompileCsound();
-
+	void createAndCompileCsound();
 };

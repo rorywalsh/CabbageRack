@@ -36,6 +36,7 @@ struct CabbageControl
 	std::vector<int> bounds = {0,0,100,100};
 	std::vector<float> range = {0, 1, 0, 1, .01};
 	int width, height, corners=3;
+	bool debug = false;
 	float value = 0.f;
 	string channel, label, caption, type;
 	vector<string> text;
@@ -51,8 +52,13 @@ struct CabbageControl
 			trackerColour = nvgRGBA(147, 210, 0, 255);
 			outlineColour = nvgRGBA(25, 25, 25, 255);
 			textColour = nvgRGBA(255, 255, 255, 255);
+			range[Range::min] = 0;
+			range[Range::max] = 1;
+			range[Range::value] = 0;
 			bounds = {0, 0, 80, 80};
 			range = {0, 1, 0, 1, .01};
+			channel = "rslider_";
+			hasChannel = true;
 			text.push_back("");	
 		}
 		else if(type == "button")
@@ -63,8 +69,11 @@ struct CabbageControl
 			fontColour = nvgRGBA(255, 255, 255, 255);
 			bounds = {0, 0, 80, 30};
 			range = {0, 1, 0, 1, 1};
-			text.push_back("Off");
-			text.push_back("On");				
+			hasChannel = true;
+			channel = "button_";
+			range[Range::min] = 0;
+			range[Range::max] = 1;
+			range[Range::value] = 0;			
 		}
 		else if(type == "checkbox")
 		{
@@ -75,6 +84,11 @@ struct CabbageControl
 			bounds = {0, 0, 80, 30};
 			range = {0, 1, 0, 1, 1};
 			text.push_back("");	
+			hasChannel = true;
+			channel = "checkbox_";
+			range[Range::min] = 0;
+			range[Range::max] = 1;
+			range[Range::value] = 0;
 		}
 		else if(type == "label")
 		{
@@ -82,6 +96,18 @@ struct CabbageControl
 			fontColour = nvgRGBA(255, 255, 255, 255);
 			bounds = {0, 0, 80, 30};
 			text.push_back("");	
+		}
+		else if(type == "combobox")
+		{
+			colour = nvgRGBA(20, 20, 20, 255);
+			fontColour = nvgRGBA(0, 255, 0, 255);
+			bounds = {0, 0, 80, 30};
+			channel = "combobox_";
+			hasChannel = true;
+			value = 1;
+			range[Range::min] = 1;
+			range[Range::max] = 2;
+			range[Range::value] = 1;
 		}
 		else if(type == "groupbox")
 		{
@@ -106,6 +132,7 @@ struct CabbageControl
 			colour = nvgRGBA(20, 20, 20, 255);
 			outlineColour = nvgRGBA(180, 180, 180, 255);
 			text.push_back(type);
+			hasChannel = true;
 		}
 	}
 };
@@ -124,7 +151,6 @@ struct CabbageParser
 		
 		while (p)
 		{
-
 			colourArray[argCount] = atof(p);
 			
 			if (argCount == numArgs)
@@ -189,14 +215,12 @@ struct CabbageParser
 				control.find("image") != std::string::npos ||
 				control.find("cvinput") != std::string::npos ||
 				control.find("cvoutput") != std::string::npos ||
+				control.find("combobox") != std::string::npos ||
 				control.find("label") != std::string::npos)
 			{
 				CabbageControl cabbageCtrl(control);
 				cabbageCtrl.type = control;
 				//init range
-				cabbageCtrl.range[Range::min] = 0;
-				cabbageCtrl.range[Range::max] = 1;
-				cabbageCtrl.range[Range::value] = 0;
 
 				if (line.find(" caption(") != std::string::npos)
 					cabbageCtrl.caption = getParameter(line, "caption(");
@@ -216,7 +240,7 @@ struct CabbageParser
 
 						while (p) 
 						{
-							cabbageCtrl.text[argIndex] = trim(string(p));							
+							cabbageCtrl.text.push_back(trim(string(p)));							
 							p = strtok(NULL, ",");
 						}
 					}
@@ -227,7 +251,11 @@ struct CabbageParser
 				if (line.find(" channel(") != std::string::npos)
 				{
 					cabbageCtrl.channel = getParameter(line, " channel(");
-					cabbageCtrl.hasChannel = true;
+				}
+
+				if (line.find(" debug(") != std::string::npos)
+				{
+					cabbageCtrl.debug = getParameter(line, " debug(") == 1 ? true : false;
 				}
 
 				if (line.find(" file(") != std::string::npos)

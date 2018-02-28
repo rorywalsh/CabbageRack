@@ -114,8 +114,7 @@ struct CabbageRotarySlider : virtual Knob, FramebufferWidget
 	}
 
 	void draw(NVGcontext *vg) override 
-	{	
-		
+	{		
 		const int centerx = box.size.x/2.65f + box.size.x/7.5f;
 		const int centery = box.size.y/2.65f;
 		const int innerSize = box.size.x*.6f;
@@ -220,6 +219,68 @@ struct CabbageButton : virtual Switch, FramebufferWidget {
 		nvgFillColor(vg, fontColour);
 		nvgTextAlign(vg, NVG_ALIGN_TOP|NVG_ALIGN_CENTER);
 		nvgTextBox(vg, 0, (box.size.y/2)-(11.f/2.f)-int(value), box.size.x-int(value), text[int(value)].c_str(), NULL);
+		nvgFill(vg);
+	}
+};
+
+//===================================================================
+// Combobox class
+//===================================================================
+struct CabbageCombobox : virtual Switch {
+
+	std::shared_ptr<Font> font;
+	NVGcolor colour, fontColour;
+	vector<string> text;
+	int max, min, value;
+
+	CabbageCombobox(CabbageControl control, Module *mod, int id)
+	{
+		paramId = id;
+		module = mod;
+		box.pos = Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]);
+		box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
+		setLimits(0.f, control.text.size());
+		max = control.text.size();
+		min = 1;
+		value = control.value;
+		setDefaultValue(control.value);
+	
+		colour = control.colour;
+		fontColour = control.fontColour;
+
+		font = Font::load(assetPlugin(plugin, "res/digital_counter_7.ttf"));
+		text = control.text;
+	}
+
+	void onMouseDown(EventMouseDown &e) override 
+	{
+		value = value < max ? value+1 : 1;
+		setValue(value);
+	}
+
+	void draw(NVGcontext *vg) override 
+	{
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 4);
+		nvgFillColor(vg, nvgRGBA(80, 80, 80, 255));
+		nvgFill(vg);
+		nvgClosePath(vg);
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, 1, 1, box.size.x-2, box.size.y-1, 4);
+		nvgFillColor(vg, nvgRGBA(170, 170, 170, 255));
+		nvgFill(vg);
+		nvgClosePath(vg);
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, 2, 2, box.size.x-3, box.size.y-2, 4);
+		nvgFillColor(vg, colour);
+		nvgFill(vg);
+		nvgBeginPath(vg);
+		nvgFontSize(vg, 11);//box.size.y*(numChars/box.size.y));
+		nvgFontFaceId(vg, font->handle);
+		nvgTextLetterSpacing(vg, -2);
+		nvgFillColor(vg, fontColour);
+		nvgTextAlign(vg, NVG_ALIGN_TOP|NVG_ALIGN_CENTER);
+		nvgTextBox(vg, 0, (box.size.y/2)-(11.f/2.f), box.size.x, text[int(value-1)].c_str(), NULL);
 		nvgFill(vg);
 	}
 };

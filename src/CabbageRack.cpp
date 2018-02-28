@@ -52,6 +52,9 @@ MyModuleWidget::MyModuleWidget()
 			else if(control.type == "checkbox")
 				addParam(new CabbageCheckbox(control, module, kRateControlIndex++));	
 
+			else if(control.type == "combobox")
+				addParam(new CabbageCombobox(control, module, kRateControlIndex++));
+
 			else if(control.type == "cvinput")
 				addInput(new CabbagePort(control, module, aRateInputIndex++));	
 
