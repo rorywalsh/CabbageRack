@@ -31,16 +31,6 @@ struct MyModuleWidget : ModuleWidget {
 
 struct CabbageRack : Module {
 
-	enum InputIds {
-		INPUT1,
-		INPUT2,
-		NUM_INPUTS
-	};
-	enum OutputIds {
-		OUTPUT1,
-		OUTPUT2,
-		NUM_OUTPUTS
-	};
 	enum LightIds {
 		BLINK_LIGHT,
 		NUM_LIGHTS
@@ -56,7 +46,7 @@ struct CabbageRack : Module {
 	float csScale = 1;
 	float phase = 0.0;
 	float blinkPhase = 0.0;
-	int numInputs, numOutputs, numControlChannels, numAudioInputChannels, numAudioOutputChannels;
+	int numControlChannels, numAudioInputChannels, numAudioOutputChannels;
 	vector<CabbageControl> cabbageControls;
 
     CabbageRack();

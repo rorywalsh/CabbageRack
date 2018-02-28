@@ -36,7 +36,6 @@ struct CabbageControl
 	std::vector<int> bounds = {0,0,100,100};
 	std::vector<float> range = {0, 1, 0, 1, .01};
 	int width, height, corners=3;
-	bool debug = false;
 	float value = 0.f;
 	string channel, label, caption, type;
 	vector<string> text;
@@ -199,160 +198,158 @@ struct CabbageParser
 			if (line.find("</") != std::string::npos)
 				break;
 
-			string newLine = line;
-			string control = line.substr(0, line.find(" ") != std::string::npos ? line.find(" ") : 0);
-			std::string::size_type i = newLine.find(control);
-
-			if (i != std::string::npos)
-				newLine.erase(i, control.length());
-
-			
-			if (control.find("slider") != std::string::npos ||
-				control.find("button") != std::string::npos ||
-				control.find("checkbox") != std::string::npos ||
-				control.find("groupbox") != std::string::npos ||
-				control.find("form") != std::string::npos ||
-				control.find("image") != std::string::npos ||
-				control.find("cvinput") != std::string::npos ||
-				control.find("cvoutput") != std::string::npos ||
-				control.find("combobox") != std::string::npos ||
-				control.find("label") != std::string::npos)
+			if(line.find(";") != 0)
 			{
-				CabbageControl cabbageCtrl(control);
-				cabbageCtrl.type = control;
-				//init range
+				string newLine = line;
+				string control = line.substr(0, line.find(" ") != std::string::npos ? line.find(" ") : 0);
+				std::string::size_type i = newLine.find(control);
 
-				if (line.find(" caption(") != std::string::npos)
-					cabbageCtrl.caption = getParameter(line, "caption(");
+				if (i != std::string::npos)
+					newLine.erase(i, control.length());
 
-				if (line.find(" text(") != std::string::npos)
+				
+				if (control.find("slider") != std::string::npos ||
+					control.find("button") != std::string::npos ||
+					control.find("checkbox") != std::string::npos ||
+					control.find("groupbox") != std::string::npos ||
+					control.find("form") != std::string::npos ||
+					control.find("image") != std::string::npos ||
+					control.find("cvinput") != std::string::npos ||
+					control.find("cvoutput") != std::string::npos ||
+					control.find("combobox") != std::string::npos ||
+					control.find("label") != std::string::npos)
 				{
-					string text = line.substr(line.find(" text(") + 7);
-					text = text.substr(0, text.find(")") - 1);
-					text.erase(std::remove(text.begin(), text.end(), '\"'), text.end());
-					const int numArgs = std::count(text.begin(), text.end(), ',')+1;
-					int argIndex = 0;
-					if(numArgs>1)
-					{
-						char myString[32];
-						sprintf(myString, text.c_str(), 32);
-						char *p = strtok(myString, ",");
+					CabbageControl cabbageCtrl(control);
+					cabbageCtrl.type = control;
+					//init range
 
-						while (p) 
+					if (line.find(" caption(") != std::string::npos)
+						cabbageCtrl.caption = getParameter(line, "caption(");
+
+					if (line.find(" text(") != std::string::npos)
+					{
+						string text = line.substr(line.find(" text(") + 7);
+						text = text.substr(0, text.find(")") - 1);
+						text.erase(std::remove(text.begin(), text.end(), '\"'), text.end());
+						const int numArgs = std::count(text.begin(), text.end(), ',')+1;
+						int argIndex = 0;
+						if(numArgs>1)
 						{
-							cabbageCtrl.text.push_back(trim(string(p)));							
+							char myString[32];
+							sprintf(myString, text.c_str(), 32);
+							char *p = strtok(myString, ",");
+
+							while (p) 
+							{
+								cabbageCtrl.text.push_back(trim(string(p)));							
+								p = strtok(NULL, ",");
+							}
+						}
+						else
+							cabbageCtrl.text[0] = text;
+					}
+
+					if (line.find(" channel(") != std::string::npos)
+					{
+						cabbageCtrl.channel = getParameter(line, " channel(");
+					}
+
+					if (line.find(" file(") != std::string::npos)
+					{
+						string file = getParameter(line, " file(");
+						file.erase(std::remove(file.begin(), file.end(), '\"'), file.end());
+						cabbageCtrl.file = file;
+					}
+
+					if (line.find(" colour(") != std::string::npos)
+					{
+						int *colourArray = getColourFromText(" colour", line);
+						cabbageCtrl.colour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
+					}
+
+					if (line.find(" outlinecolour(") != std::string::npos)
+					{
+						int *colourArray = getColourFromText(" outlinecolour", line);
+						cabbageCtrl.outlineColour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
+					}
+
+					if (line.find(" colour:0(") != std::string::npos)
+					{
+						int *colourArray = getColourFromText(" colour:0", line);
+						cabbageCtrl.colour0 = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
+					}
+
+					if (line.find(" colour:1(") != std::string::npos)
+					{
+						int *colourArray = getColourFromText(" colour:1", line);
+						cabbageCtrl.colour1 = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
+					}
+
+					if (line.find(" textcolour(") != std::string::npos)
+					{
+						int *colourArray = getColourFromText(" textcolour", line);
+						cabbageCtrl.textColour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
+					}
+
+					if (line.find(" trackercolour(") != std::string::npos)
+					{
+						int *colourArray = getColourFromText(" trackercolour", line);
+						cabbageCtrl.trackerColour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
+					}
+
+					if (line.find(" fontcolour(") != std::string::npos)
+					{
+						int *colourArray = getColourFromText(" fontcolour", line);
+						cabbageCtrl.fontColour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
+					}
+
+					if (line.find(" bounds(") != std::string::npos)
+					{
+						string bounds = line.substr(line.find(" bounds(") + 8);
+						bounds = bounds.substr(0, bounds.find(")"));
+						char *p = strtok(&bounds[0u], ",");
+						int argCount = 0;
+						while (p)
+						{
+							cabbageCtrl.bounds[argCount] = atof(p);
+							argCount++;
+							if (argCount == 4)
+								break;
 							p = strtok(NULL, ",");
 						}
 					}
-					else
-						cabbageCtrl.text[0] = text;
-				}
 
-				if (line.find(" channel(") != std::string::npos)
-				{
-					cabbageCtrl.channel = getParameter(line, " channel(");
-				}
-
-				if (line.find(" debug(") != std::string::npos)
-				{
-					cabbageCtrl.debug = getParameter(line, " debug(") == 1 ? true : false;
-				}
-
-				if (line.find(" file(") != std::string::npos)
-				{
-					string file = getParameter(line, " file(");
-					file.erase(std::remove(file.begin(), file.end(), '\"'), file.end());
-					cabbageCtrl.file = file;
-				}
-
-				if (line.find(" colour(") != std::string::npos)
-				{
-					int *colourArray = getColourFromText(" colour", line);
-					cabbageCtrl.colour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
-				}
-
-				if (line.find(" outlinecolour(") != std::string::npos)
-				{
-					int *colourArray = getColourFromText(" outlinecolour", line);
-					cabbageCtrl.outlineColour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
-				}
-
-				if (line.find(" colour:0(") != std::string::npos)
-				{
-					int *colourArray = getColourFromText(" colour:0", line);
-					cabbageCtrl.colour0 = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
-				}
-
-				if (line.find(" colour:1(") != std::string::npos)
-				{
-					int *colourArray = getColourFromText(" colour:1", line);
-					cabbageCtrl.colour1 = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
-				}
-
-				if (line.find(" textcolour(") != std::string::npos)
-				{
-					int *colourArray = getColourFromText(" textcolour", line);
-					cabbageCtrl.textColour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
-				}
-
-				if (line.find(" trackercolour(") != std::string::npos)
-				{
-					int *colourArray = getColourFromText(" trackercolour", line);
-					cabbageCtrl.trackerColour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
-				}
-
-				if (line.find(" fontcolour(") != std::string::npos)
-				{
-					int *colourArray = getColourFromText(" fontcolour", line);
-					cabbageCtrl.fontColour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
-				}
-
-				if (line.find(" bounds(") != std::string::npos)
-				{
-					string bounds = line.substr(line.find(" bounds(") + 8);
-					bounds = bounds.substr(0, bounds.find(")"));
-					char *p = strtok(&bounds[0u], ",");
-					int argCount = 0;
-					while (p)
+					if (line.find(" size(") != std::string::npos)
 					{
-						cabbageCtrl.bounds[argCount] = atof(p);
-						argCount++;
-						if (argCount == 4)
-							break;
-						p = strtok(NULL, ",");
+						string size = line.substr(line.find(" size(") + 6);
+						cabbageCtrl.width = stoi(size.substr(0, size.find(",")));
+						cabbageCtrl.height = stoi(size.substr(size.find(",")+1, size.find(")")));
 					}
-				}
 
-				if (line.find(" size(") != std::string::npos)
-				{
-					string size = line.substr(line.find(" size(") + 6);
-					cabbageCtrl.width = stoi(size.substr(0, size.find(",")));
-					cabbageCtrl.height = stoi(size.substr(size.find(",")+1, size.find(")")));
-				}
-
-				if (line.find(" range(") != std::string::npos)
-				{
-					string range = line.substr(line.find(" range(") + 7);
-					range = range.substr(0, range.find(")"));
-					char *p = strtok(&range[0u], ",");
-					int argCount = 0;
-					while (p)
+					if (line.find(" range(") != std::string::npos)
 					{
-						cabbageCtrl.range[argCount] = atof(p);
-						argCount++;
-						if (argCount == 3)
-							break;
-						p = strtok(NULL, ",");
+						string range = line.substr(line.find(" range(") + 7);
+						range = range.substr(0, range.find(")"));
+						char *p = strtok(&range[0u], ",");
+						int argCount = 0;
+						while (p)
+						{
+							cabbageCtrl.range[argCount] = atof(p);
+							argCount++;
+							if (argCount == 3)
+								break;
+							p = strtok(NULL, ",");
+						}
 					}
+
+					if (line.find(" value(") != std::string::npos)
+						cabbageCtrl.value = getParameter(line, " value(").length() > 0 ? atof(getParameter(line, " value(").c_str()) : 0;
+
+					if (line.find(" corners(") != std::string::npos)				
+						cabbageCtrl.corners = atoi(getParameter(line, " corners(").c_str());
+
+					cabbageControls.push_back(cabbageCtrl);
 				}
-
-				if (line.find(" value(") != std::string::npos)
-					cabbageCtrl.value = getParameter(line, " value(").length() > 0 ? atof(getParameter(line, " value(").c_str()) : 0;
-
-				if (line.find(" corners(") != std::string::npos)				
-					cabbageCtrl.corners = atoi(getParameter(line, " corners(").c_str());
-
-				cabbageControls.push_back(cabbageCtrl);
 			}
 		}
 

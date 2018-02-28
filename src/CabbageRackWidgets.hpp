@@ -300,7 +300,7 @@ struct CabbageCheckbox : virtual Switch, FramebufferWidget {
 		module = mod;
 		box.pos = Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]);
 		//rescaling here to keep things in line with Cabbage look and feel for checkboxes
-		box.size = Vec(control.bounds[Bounds::width]*.7f, control.bounds[Bounds::height]*.7f);
+		box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
 		setLimits(0.f, 1.f);
 		setDefaultValue(control.value);
 		
@@ -506,7 +506,7 @@ struct CabbagePort : Port, FramebufferWidget
 		nvgTextLetterSpacing(vg, -2);
 		nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
 		nvgTextAlign(vg, NVG_ALIGN_CENTER);
-		nvgTextBox(vg, 0, 6, box.size.x, text.c_str(), NULL);
+		nvgTextBox(vg, 0, 10, box.size.x, text.c_str(), NULL);
 		nvgBeginPath(vg);
         nvgCircle(vg, box.size.x/2, box.size.y/2, 10);
         nvgFillColor(vg, nvgRGBA(80, 80, 80, 255));

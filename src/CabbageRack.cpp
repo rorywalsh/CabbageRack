@@ -76,12 +76,12 @@ MyModuleWidget::MyModuleWidget()
 // CabbageRack implementation
 //============================================================
 CabbageRack::CabbageRack() : 
-	Module(1, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS),
-	numInputs(NUM_INPUTS),
-	numOutputs(NUM_OUTPUTS)
+	Module(1, 2, 2, 2)
 {
 	createAndCompileCsound();                
-	params.resize(numControlChannels);                   
+	params.resize(numControlChannels);  
+	inputs.resize(numAudioInputChannels);
+	outputs.resize(numAudioOutputChannels);              
 	csound->SetMessageCallback(MessageCallback);
 }
 
@@ -143,14 +143,12 @@ void CabbageRack::step()
 			int audioOutputIndex = 0;
 			for( int i = 0 ; i < (int)cabbageControls.size();i++)
 			{
-				if(cabbageControls[i].hasChannel)
+				if(cabbageControls[i].hasChannel && compileError == 0)
 				{
 					if(cabbageControls[i].type == "cvoutput")
             			csound->GetAudioChannel(cabbageControls[i].channel.c_str(), audioOutputChannels[audioOutputIndex++]);
 					else if(cabbageControls[i].type == "cvinput")
-					{
-            		   	csound->SetChannel(cabbageControls[i].channel.c_str(), audioInputChannels[audioInputIndex++]);
-					}
+            		    	csound->SetChannel(cabbageControls[i].channel.c_str(), audioInputChannels[audioInputIndex++]);
 					else
 						csound->SetChannel(cabbageControls[i].channel.c_str(), params[controlIndex++].value);
 				}				
@@ -159,10 +157,10 @@ void CabbageRack::step()
 		
 		if (compileError == 0)
 		{
+			for ( int i = 0 ; i < audioInputChannels.size() ; i++)
+			 	audioInputChannels[i][kIndex] = inputs[i].value / 10.f;	
 			for ( int i = 0 ; i < audioOutputChannels.size() ; i++)
-				audioInputChannels[i][kIndex] = inputs[i].value / 10.f;	
-			for ( int i = 0 ; i < audioOutputChannels.size() ; i++)
-				outputs[i].value = (audioOutputChannels[i][kIndex] / csScale ) * 10.f;	
+			 	outputs[i].value = (audioOutputChannels[i][kIndex] / csScale ) * 10.f;	
 			
             kIndex++;
 		}
