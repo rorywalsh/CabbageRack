@@ -21,7 +21,7 @@ MyModuleWidget::MyModuleWidget()
 	int aRateOutputIndex = 0;
 	int width, height, centre;
 	
-	for( auto control : module->cabbageControls)
+	for( auto& control : module->cabbageControls)
 	{
 		if(control.type == "form")
 		{
@@ -80,8 +80,8 @@ CabbageRack::CabbageRack() :
 {
 	createAndCompileCsound();                
 	params.resize(numControlChannels);  
-	inputs.resize(numAudioInputChannels);
-	outputs.resize(numAudioOutputChannels);              
+	inputs.resize(audioInputControls.size());
+	outputs.resize(audioOutputControls.size());              
 	csound->SetMessageCallback(MessageCallback);
 }
 
@@ -90,6 +90,7 @@ void CabbageRack::createAndCompileCsound()
 	csound = new Csound(); 
 	csound->SetOption((char*)"-n");
 	csound->SetOption((char*)"-d");
+
 
 	CSOUND_PARAMS* csoundParams = nullptr;
 	csoundParams = new CSOUND_PARAMS();
@@ -104,30 +105,35 @@ void CabbageRack::createAndCompileCsound()
 
 	cabbageControls = CabbageParser::getCabbageControlVector(csdFileName);
 	numControlChannels = CabbageParser::getNumberOfControlChannels(cabbageControls);
-	numAudioOutputChannels = CabbageParser::getNumberOfAudioChannels(cabbageControls, "cvoutput");
-	numAudioInputChannels = CabbageParser::getNumberOfAudioChannels(cabbageControls, "cvinput");
+	audioOutputControls = CabbageParser::getAudioChannels(cabbageControls, "cvoutput");
+	audioInputControls = CabbageParser::getAudioChannels(cabbageControls, "cvinput");
 
 	if(compileError != 0)
 		cout << "Csound could not compile" << endl;
 	else
-	{                                    
+	{    
 		ksmps = csound->GetKsmps();
-		for( int i = 0 ; i < numAudioOutputChannels ; i++)
-        	audioOutputChannels.push_back((MYFLT*)malloc(sizeof(MYFLT)*ksmps));
-		for( int i = 0 ; i < numAudioInputChannels ; i++)
+		audioOutputChannels = new MYFLT*[audioOutputControls.size()];
+		audioInputChannels = new MYFLT*[audioInputControls.size()];
+
+		for( int i = 0 ; i < audioOutputControls.size() ; i++)
 		{
-			audioInputChannels.push_back((MYFLT*)malloc(sizeof(MYFLT)*ksmps));
-			for( int index = 0 ; index < ksmps ; index++)
-				audioInputChannels[i][index] = 0.f;
+			audioOutputChannels[i] = new MYFLT(0.0);
+			csoundGetChannelPtr(csound->GetCsound(), &audioOutputChannels[i], audioOutputControls[i].channel.c_str(),
+                            CSOUND_AUDIO_CHANNEL | CSOUND_OUTPUT_CHANNEL);
 		}
         	
+		for( int i = 0 ; i < audioInputControls.size() ; i++)
+		{
+			audioInputChannels[i] = new MYFLT(0.0);
+			csoundGetChannelPtr(csound->GetCsound(), &audioInputChannels[i], audioInputControls[i].channel.c_str(),
+                           CSOUND_AUDIO_CHANNEL | CSOUND_OUTPUT_CHANNEL);
+		}      	
 			
 		csScale = csound->Get0dBFS();
-	}
-
-
-	
+	}	
 }
+
 void CabbageRack::step() 
 {
 	if(compileError==0)
@@ -145,11 +151,11 @@ void CabbageRack::step()
 			{
 				if(cabbageControls[i].hasChannel && compileError == 0)
 				{
-					if(cabbageControls[i].type == "cvoutput")
-            			csound->GetAudioChannel(cabbageControls[i].channel.c_str(), audioOutputChannels[audioOutputIndex++]);
-					else if(cabbageControls[i].type == "cvinput")
-            		    	csound->SetChannel(cabbageControls[i].channel.c_str(), audioInputChannels[audioInputIndex++]);
-					else
+					// if(cabbageControls[i].type == "cvoutput")
+            		// 	csound->GetAudioChannel(cabbageControls[i].channel.c_str(), audioOutputChannels[audioOutputIndex++]);
+					// else if(cabbageControls[i].type == "cvinput")
+            		//     	csound->SetChannel(cabbageControls[i].channel.c_str(), audioInputChannels[audioInputIndex++]);
+					// else
 						csound->SetChannel(cabbageControls[i].channel.c_str(), params[controlIndex++].value);
 				}				
 			}
@@ -157,9 +163,9 @@ void CabbageRack::step()
 		
 		if (compileError == 0)
 		{
-			for ( int i = 0 ; i < audioInputChannels.size() ; i++)
-			 	audioInputChannels[i][kIndex] = inputs[i].value / 10.f;	
-			for ( int i = 0 ; i < audioOutputChannels.size() ; i++)
+			for ( int i = 0 ; i < audioInputControls.size() ; i++)
+			 	audioInputChannels[i][kIndex] = inputs[i].value;	
+			for ( int i = 0 ; i < audioOutputControls.size() ; i++)
 			 	outputs[i].value = (audioOutputChannels[i][kIndex] / csScale ) * 10.f;	
 			
             kIndex++;

@@ -369,16 +369,16 @@ struct CabbageParser
 		return numberOfControlChannels;
 	}
 
-	static int getNumberOfAudioChannels(vector<CabbageControl> csndChannels, string type)
+	static vector<CabbageControl> getAudioChannels(vector<CabbageControl> csndChannels, string type)
 	{
-		int numberOfAudioChannels = 0;
+		vector<CabbageControl> chans;
 
 		for (auto channel : csndChannels)
 		{
 			if(channel.type == type)
-				numberOfAudioChannels++;
+				chans.push_back(channel);
 		}
 
-		return numberOfAudioChannels;
+		return chans;
 	}
 };

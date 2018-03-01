@@ -37,8 +37,9 @@ struct CabbageRack : Module {
 	};
 
     Csound* csound;
-	vector<MYFLT*> audioOutputChannels;
-	vector<MYFLT*> audioInputChannels;
+	MYFLT** audioOutputChannels;
+	MYFLT** audioInputChannels;
+
     int ksmps, result, compileError; 
 	int kIndex = 0;
 	int samplePos = 0;
@@ -48,9 +49,17 @@ struct CabbageRack : Module {
 	float blinkPhase = 0.0;
 	int numControlChannels, numAudioInputChannels, numAudioOutputChannels;
 	vector<CabbageControl> cabbageControls;
+	vector<CabbageControl> audioOutputControls;
+	vector<CabbageControl> audioInputControls;
 
     CabbageRack();
-    ~CabbageRack(){        delete csound;    }
+	
+    ~CabbageRack()
+	{
+		free(audioInputChannels);
+		free(audioOutputChannels);
+		delete csound;    
+	}
 
 	void step() override;
 	void createAndCompileCsound();

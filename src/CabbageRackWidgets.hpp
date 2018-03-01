@@ -122,7 +122,7 @@ struct CabbageRotarySlider : virtual Knob, FramebufferWidget
 		//pie segment
 		nvgBeginPath(vg);
 		nvgMoveTo(vg, centerx, centery);
-		nvgArc(vg, centerx, centery, radius, (NVG_PI / 1.5), (NVG_PI / 1.5) + ((NVG_PI* 1.67) * value/maxValue), NVG_CW);
+		nvgArc(vg, centerx, centery, radius, (NVG_PI / 1.5), (NVG_PI / 1.5) + (NVG_PI* 1.67) * (value+abs(minValue))/(maxValue+abs(minValue)), NVG_CW);
 		nvgLineTo(vg, centerx, centery);
 		nvgFillColor(vg, tracker);
 		nvgFill(vg);
