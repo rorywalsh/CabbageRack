@@ -122,6 +122,13 @@ struct CabbageControl
 			outlineColour = nvgRGBA(255, 255, 255, 255);
 			bounds = {0, 0, 80, 30};
 		}
+		else if(type == "light")
+		{
+			colour = nvgRGBA(255, 0, 0, 255);
+			outlineColour = nvgRGBA(255, 255, 255, 255);
+			bounds = {0, 0, 80, 30};
+			hasChannel = true;
+		}
 		else if(type == "form")
 		{
 			colour = nvgRGBA(20, 20, 20, 255);
@@ -130,7 +137,7 @@ struct CabbageControl
 		{
 			colour = nvgRGBA(20, 20, 20, 255);
 			outlineColour = nvgRGBA(180, 180, 180, 255);
-			text.push_back(type);
+			text.push_back("");
 			hasChannel = true;
 		}
 	}
@@ -214,6 +221,7 @@ struct CabbageParser
 					control.find("groupbox") != std::string::npos ||
 					control.find("form") != std::string::npos ||
 					control.find("image") != std::string::npos ||
+					control.find("light") != std::string::npos ||
 					control.find("cvinput") != std::string::npos ||
 					control.find("cvoutput") != std::string::npos ||
 					control.find("combobox") != std::string::npos ||

@@ -31,11 +31,6 @@ struct MyModuleWidget : ModuleWidget {
 
 struct CabbageRack : Module {
 
-	enum LightIds {
-		BLINK_LIGHT,
-		NUM_LIGHTS
-	};
-
     Csound* csound;
 	MYFLT** audioOutputChannels;
 	MYFLT** audioInputChannels;

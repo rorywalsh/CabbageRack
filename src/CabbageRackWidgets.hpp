@@ -468,6 +468,22 @@ struct CabbageImage : FramebufferWidget
 	}
 };
 
+struct CabbageLight : ModuleLightWidget 
+{
+	int corners = corners;
+	//NVGcolor colour;
+
+	CabbageLight(CabbageControl control, Module* mod, int lightId) 
+	{
+		box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
+		box.pos = Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]);
+		addBaseColor(control.colour);
+		module = mod;
+		firstLightId = lightId;
+		corners = control.corners;
+	}
+};
+
 //===================================================================
 // Input / Output port
 //===================================================================
@@ -475,7 +491,7 @@ struct CabbagePort : Port, FramebufferWidget
 {
 	std::shared_ptr<Font> font;
 	string text;
-	NVGcolor outlineColour, colour;
+	NVGcolor outlineColour, colour, fontcolour;
 
 	CabbagePort(CabbageControl control,  Module *mod, int id)
 	{
@@ -485,6 +501,7 @@ struct CabbagePort : Port, FramebufferWidget
 		portId = id;
 		type = control.type == "cvinput" ? Port::INPUT : Port::OUTPUT;
 		outlineColour = control.outlineColour;
+		fontcolour = control.fontColour;
 		colour = control.colour;
 		text = control.text[0];
 		font = Font::load(assetPlugin(plugin, "res/Vera-Bold.ttf"));
@@ -493,20 +510,12 @@ struct CabbagePort : Port, FramebufferWidget
 	void draw(NVGcontext *vg) override
 	{
 		nvgBeginPath(vg);
-        // nvgRoundedRect(vg, 0, -5, box.size.x, box.size.y, 3);
-        // nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-        // nvgFill(vg);
-		// nvgBeginPath(vg);
-        // nvgRoundedRect(vg, 1, -4, box.size.x-2, box.size.y-2, 3);
-        // nvgFillColor(vg, nvgRGBA(30, 30, 30, 255));
-        // nvgFill(vg);
-		// nvgClosePath(vg);
 		nvgFontSize(vg, 10);
 		nvgFontFaceId(vg, font->handle);
 		nvgTextLetterSpacing(vg, -2);
-		nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
+		nvgFillColor(vg, fontcolour);
 		nvgTextAlign(vg, NVG_ALIGN_CENTER);
-		nvgTextBox(vg, 0, 10, box.size.x, text.c_str(), NULL);
+		nvgTextBox(vg, 0, box.size.y-5, box.size.x, text.c_str(), NULL);
 		nvgBeginPath(vg);
         nvgCircle(vg, box.size.x/2, box.size.y/2, 10);
         nvgFillColor(vg, nvgRGBA(80, 80, 80, 255));

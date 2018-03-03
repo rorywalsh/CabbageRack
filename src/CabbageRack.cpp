@@ -19,6 +19,7 @@ MyModuleWidget::MyModuleWidget()
 	int kRateControlIndex = 0;
 	int aRateInputIndex = 0;
 	int aRateOutputIndex = 0;
+	int lightIndex = 0;
 	int width, height, centre;
 	
 	for( auto& control : module->cabbageControls)
@@ -47,7 +48,13 @@ MyModuleWidget::MyModuleWidget()
 				addParam(new CabbageRotarySlider(control, module, kRateControlIndex++));			
 
 			else if(control.type == "button")
-				addParam(new CabbageButton(control, module, kRateControlIndex++));	
+				addParam(new CabbageButton(control, module, kRateControlIndex++));
+
+			else if(control.type == "light")
+			{
+				addChild(new CabbageLight(control, module, lightIndex++));
+			}
+					
 			
 			else if(control.type == "checkbox")
 				addParam(new CabbageCheckbox(control, module, kRateControlIndex++));	
@@ -68,8 +75,7 @@ MyModuleWidget::MyModuleWidget()
 	addChild(createScrew<ScrewSilver>(Vec(box.size.x - 16, 0)));
 	addChild(createScrew<ScrewSilver>(Vec(0, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 	addChild(createScrew<ScrewSilver>(Vec(box.size.x - 16, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-	
-	//addChild(createLight<MediumLight<RedLight>>(Vec(41, 59), module, CabbageRack::BLINK_LIGHT));
+
 }
 
 //============================================================
@@ -118,16 +124,16 @@ void CabbageRack::createAndCompileCsound()
 
 		for( int i = 0 ; i < audioOutputControls.size() ; i++)
 		{
-			audioOutputChannels[i] = new MYFLT(0.0);
+			audioOutputChannels[i] = new MYFLT[ksmps];
 			csoundGetChannelPtr(csound->GetCsound(), &audioOutputChannels[i], audioOutputControls[i].channel.c_str(),
                             CSOUND_AUDIO_CHANNEL | CSOUND_OUTPUT_CHANNEL);
 		}
         	
 		for( int i = 0 ; i < audioInputControls.size() ; i++)
 		{
-			audioInputChannels[i] = new MYFLT(0.0);
+			audioInputChannels[i] = new MYFLT[ksmps];
 			csoundGetChannelPtr(csound->GetCsound(), &audioInputChannels[i], audioInputControls[i].channel.c_str(),
-                           CSOUND_AUDIO_CHANNEL | CSOUND_OUTPUT_CHANNEL);
+                           CSOUND_AUDIO_CHANNEL | CSOUND_INPUT_CHANNEL);
 		}      	
 			
 		csScale = csound->Get0dBFS();
@@ -143,20 +149,12 @@ void CabbageRack::step()
 			kIndex = 0;
 			compileError = csound->PerformKsmps();
 
-            //csound->GetAudioChannel("out2", audioChannel2);
 			int controlIndex = 0;
-			int audioInputIndex = 0;
-			int audioOutputIndex = 0;
 			for( int i = 0 ; i < (int)cabbageControls.size();i++)
 			{
 				if(cabbageControls[i].hasChannel && compileError == 0)
 				{
-					// if(cabbageControls[i].type == "cvoutput")
-            		// 	csound->GetAudioChannel(cabbageControls[i].channel.c_str(), audioOutputChannels[audioOutputIndex++]);
-					// else if(cabbageControls[i].type == "cvinput")
-            		//     	csound->SetChannel(cabbageControls[i].channel.c_str(), audioInputChannels[audioInputIndex++]);
-					// else
-						csound->SetChannel(cabbageControls[i].channel.c_str(), params[controlIndex++].value);
+					csound->SetChannel(cabbageControls[i].channel.c_str(), params[controlIndex++].value);
 				}				
 			}
 		}
