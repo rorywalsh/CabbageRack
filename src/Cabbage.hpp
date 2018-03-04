@@ -42,7 +42,7 @@ struct CabbageRack : Module {
 	float csScale = 1;
 	float phase = 0.0;
 	float blinkPhase = 0.0;
-	int numControlChannels, numAudioInputChannels, numAudioOutputChannels;
+	int numControlChannels, numAudioInputChannels, numAudioOutputChannels, numLights;;
 	vector<CabbageControl> cabbageControls;
 	vector<CabbageControl> audioOutputControls;
 	vector<CabbageControl> audioInputControls;

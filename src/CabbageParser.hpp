@@ -40,6 +40,7 @@ struct CabbageControl
 	string channel, label, caption, type;
 	vector<string> text;
 	bool hasChannel = false;
+	bool isLight = false;
 	string file = "";
 
 	CabbageControl(string type)
@@ -85,6 +86,7 @@ struct CabbageControl
 			text.push_back("");	
 			hasChannel = true;
 			channel = "checkbox_";
+			value = 0;
 			range[Range::min] = 0;
 			range[Range::max] = 1;
 			range[Range::value] = 0;
@@ -127,7 +129,7 @@ struct CabbageControl
 			colour = nvgRGBA(255, 0, 0, 255);
 			outlineColour = nvgRGBA(255, 255, 255, 255);
 			bounds = {0, 0, 80, 30};
-			hasChannel = true;
+			isLight = true;
 		}
 		else if(type == "form")
 		{
@@ -138,7 +140,6 @@ struct CabbageControl
 			colour = nvgRGBA(20, 20, 20, 255);
 			outlineColour = nvgRGBA(180, 180, 180, 255);
 			text.push_back("");
-			hasChannel = true;
 		}
 	}
 };
@@ -388,5 +389,18 @@ struct CabbageParser
 		}
 
 		return chans;
+	}
+
+	static int getNumberOfLights(vector<CabbageControl> csndChannels)
+	{
+		int numberOfLights = 0;
+
+		for (auto channel : csndChannels)
+		{
+			if(channel.type == "light")
+				numberOfLights++;
+		}
+
+		return numberOfLights;
 	}
 };
