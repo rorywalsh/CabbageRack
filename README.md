@@ -1,6 +1,7 @@
 # Cabbage for VCV RACK 
 (work in progress - not ready for public consumption!)
 
+https://github.com/rorywalsh/CabbageRack/blob/master/example.gif
 
 ## Building 
 
