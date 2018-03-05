@@ -12,6 +12,9 @@ ifndef ARCH
 	ARCH=lin
 endif 
 
+#CXXFLAGS += -I /Library/Frameworks/CsoundLib64.framework/Headers 
+#LDFLAGS +=   -F /Library/Frameworks/ -framework CsoundLib64 -rpath
+
 ifeq ($(ARCH), win)
     CSOUND_INCLUDE ?= "c:\PROGRA~1\Csound6_x64\include"
     CSOUND_LIBRARY ?= "c:\PROGRA~1\Csound6_x64\lib\csound64.lib"
