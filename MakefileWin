@@ -8,18 +8,17 @@ VERSION = 0.5.0
 FLAGS +=
 CFLAGS +=
 
-CXXFLAGS += -I /usr/local/include/csound
-LDFLAGS += -L /usr/loca/lib -lcsound64
-endif
 
-# Add .cpp and .c files to the build
+CSOUND_INCLUDE ?= "c:\PROGRA~1\Csound6_x64\include"
+CSOUND_LIBRARY ?= "c:\PROGRA~1\Csound6_x64\lib\csound64.lib"
+CXXFLAGS += -I $(CSOUND_INCLUDE)
+LDFLAGS += $(CSOUND_LIBRARY)
+
+
 SOURCES += $(wildcard src/*.cpp)
-
-# Add files to the ZIP package when running `make dist`
-# The compiled plugin is automatically added.
 DISTRIBUTABLES += $(wildcard LICENSE*) res
 
-# If RACK_DIR is not defined when calling the Makefile, default to two levels above
+
 RACK_DIR ?= ../..
 
 # Include the VCV Rack plugin Makefile framework

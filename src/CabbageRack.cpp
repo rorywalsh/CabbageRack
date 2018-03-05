@@ -86,7 +86,7 @@ CabbageRack::CabbageRack() :
 	inputs.resize(audioInputControls.size());
 	lights.resize(numLights);
 	outputs.resize(audioOutputControls.size());              
-	csound->SetMessageCallback(MessageCallback);
+	//csound->SetMessageCallback(MessageCallback);
 }
 
 void CabbageRack::createAndCompileCsound() 
@@ -94,18 +94,22 @@ void CabbageRack::createAndCompileCsound()
 	csound = new Csound(); 
 	csound->SetOption((char*)"-n");
 	csound->SetOption((char*)"-d");
+	const string csdFileName(plugin->path+ "/" +plugin->path.substr(plugin->path.find("/", 3)+1)+".csd");
+	csound->SetHostImplementedAudioIO(1, 0);
 
-
+#ifndef ARCH_MAC
 	CSOUND_PARAMS* csoundParams = nullptr;
 	csoundParams = new CSOUND_PARAMS();
 	csoundParams->sample_rate_override = engineGetSampleRate();
 	csoundParams->displays = 0;		
 	csound->SetParams(csoundParams);
-	csound->SetHostImplementedAudioIO(1, 0);
-	csound->SetHostData(this);
-
-	const string csdFileName(plugin->path+ "/" +plugin->path.substr(plugin->path.find("/", 3)+1)+".csd");
 	compileError = csound->Compile(csdFileName.c_str());
+#else
+	string sr_override = "--sample-rate=" + to_string(engineGetSampleRate());
+	compileError = csound->Compile(csdFileName.c_str(), (char *) sr_override.c_str());
+#endif
+	
+	
 
 	cabbageControls = CabbageParser::getCabbageControlVector(csdFileName);
 	numControlChannels = CabbageParser::getNumberOfControlChannels(cabbageControls);
@@ -122,14 +126,14 @@ void CabbageRack::createAndCompileCsound()
 		audioOutputChannels = new MYFLT*[audioOutputControls.size()];
 		audioInputChannels = new MYFLT*[audioInputControls.size()];
 
-		for( int i = 0 ; i < audioOutputControls.size() ; i++)
+		for( int i = 0 ; i < (int)audioOutputControls.size() ; i++)
 		{
 			audioOutputChannels[i] = new MYFLT[ksmps];
 			csoundGetChannelPtr(csound->GetCsound(), &audioOutputChannels[i], audioOutputControls[i].channel.c_str(),
                             CSOUND_AUDIO_CHANNEL | CSOUND_OUTPUT_CHANNEL);
 		}
         	
-		for( int i = 0 ; i < audioInputControls.size() ; i++)
+		for( int i = 0 ; i < (int)audioInputControls.size() ; i++)
 		{
 			audioInputChannels[i] = new MYFLT[ksmps];
 			csoundGetChannelPtr(csound->GetCsound(), &audioInputChannels[i], audioInputControls[i].channel.c_str(),
@@ -150,7 +154,8 @@ void CabbageRack::step()
 		if(kIndex == ksmps)
 		{
 			kIndex = 0;
-			compileError = csound->PerformKsmps();
+			if(csound)
+				compileError = csound->PerformKsmps();
 
 			int controlIndex = 0;
 			int lightIndex = 0;
@@ -166,9 +171,9 @@ void CabbageRack::step()
 			}
 		}
 		
-		for ( int i = 0 ; i < audioInputControls.size() ; i++)
+		for ( int i = 0 ; i < (int)audioInputControls.size() ; i++)
 			audioInputChannels[i][kIndex] = inputs[i].value;	
-		for ( int i = 0 ; i < audioOutputControls.size() ; i++)
+		for ( int i = 0 ; i < (int)audioOutputControls.size() ; i++)
 			outputs[i].value = (audioOutputChannels[i][kIndex] / csScale ) * 10.f;	
 		
 		kIndex++;

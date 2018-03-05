@@ -180,7 +180,7 @@ instr 2
             aOut oscili 1, cpsmidinn(p6), 3
         endif
         ;Out*chnget:k("gain"), aOut*chnget:k("gain")
-        chnmix aOut*chnget:k("gain"), "signal"
+        chnmix aEnv*aOut*chnget:k("gain"), "signal"
     endif       
     
 endin

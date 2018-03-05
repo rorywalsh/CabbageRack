@@ -248,7 +248,7 @@ struct CabbageCombobox : virtual Switch {
 		colour = control.colour;
 		fontColour = control.fontColour;
 
-		font = Font::load(assetPlugin(plugin, "res/digital_counter_7.ttf"));
+		font = Font::load(assetPlugin(plugin, "res/DS-DIGI.TTF"));
 		text = control.text;
 	}
 
@@ -275,7 +275,7 @@ struct CabbageCombobox : virtual Switch {
 		nvgFillColor(vg, colour);
 		nvgFill(vg);
 		nvgBeginPath(vg);
-		nvgFontSize(vg, 11);//box.size.y*(numChars/box.size.y));
+		nvgFontSize(vg, 13);//box.size.y*(numChars/box.size.y));
 		nvgFontFaceId(vg, font->handle);
 		nvgTextLetterSpacing(vg, -2);
 		nvgFillColor(vg, fontColour);
