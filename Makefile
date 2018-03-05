@@ -10,7 +10,7 @@ CFLAGS +=
 
 CXXFLAGS += -I /usr/local/include/csound
 LDFLAGS += -L /usr/loca/lib -lcsound64
-endif
+
 
 # Add .cpp and .c files to the build
 SOURCES += $(wildcard src/*.cpp)
