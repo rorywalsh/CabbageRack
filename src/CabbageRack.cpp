@@ -1,11 +1,5 @@
 #include "Cabbage.hpp"
-#include "csound.hpp"
-#include <iostream>
-#include <string>
-#include <math.h>
-#include <cstdlib>
-#include <stdio.h>
-#include <stdlib.h>
+
 
 using namespace std;
 
@@ -15,136 +9,171 @@ void MessageCallback(CSOUND* cs, int attr, const char *format, va_list valist)
   return;
 }
 
-struct CabbageRack : Module {
-	enum ParamIds {
-		PITCH_PARAM,
-		NUM_PARAMS
-	};
-	enum InputIds {
-		PITCH_INPUT,
-		NUM_INPUTS
-	};
-	enum OutputIds {
-		OUTPUT1,
-		NUM_OUTPUTS
-	};
-	enum LightIds {
-		BLINK_LIGHT,
-		NUM_LIGHTS
-	};
-
-    Csound* csound;
-    MYFLT *spin, *spout;
-    int ksmps, result, compileError; 
-	int kIndex = 0;
-	int samplePos = 0;
-    int const nchnls = 2;       // 2 inputs and 2 outputs in csd
-	float csScale = 1;
-	float phase = 0.0;
-	float blinkPhase = 0.0;
-
-
-    void createAndCompileCsound() 
-	{
-		csound = new Csound(); 
-		csound->SetOption((char*)"-n");
-		csound->SetOption((char*)"-d");
-        spout = csound->GetSpout();                                   
-        spin  = csound->GetSpin();                                     
-        ksmps = csound->GetKsmps();
-		csScale = csound->Get0dBFS();
-		CSOUND_PARAMS* csoundParams = nullptr;
-		csoundParams = new CSOUND_PARAMS();
-		csoundParams->sample_rate_override = engineGetSampleRate();
-		csoundParams->displays = 0;		
-		csound->SetParams(csoundParams);
-		csound->SetHostImplementedAudioIO(1, 0);
-		csound->SetHostData(this);
-
-		compileError = csound->Compile("./plugins/CabbageRack/src/test.csd");
-		if(compileError != 0)
-			cout << "Csound could not compile" << endl;
-
-		csound->PerformKsmps();
-    }
-
-	CabbageRack() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) 
-	{
-		
-		createAndCompileCsound();                                     
-        csound->SetMessageCallback(MessageCallback);
-	}
-
-
-    ~CabbageRack()
-    {
-        delete csound;            
-    }
-
-	void step() override;
-
-	// For more advanced Module features, read Rack's engine.hpp header file
-	// - toJson, fromJson: serialization of internal data
-	// - onSampleRateChange: event triggered by a change of sample rate
-	// - onReset, onRandomize, onCreate, onDelete: implements special behavior when user clicks these from the context menu
-};
-
-
-void CabbageRack::step() {
-	// Implement a simple sine oscillator
-	//float deltaTime = 1.0 / engineGetSampleRate();
-	
-	if(kIndex == ksmps)
-	{
-		kIndex = 0;
-		csound->PerformKsmps();
-		//compileError = csound->PerformKsmps();
-	}
-
-	kIndex++;
-	// if (compileError == 0)
-	// {
-	// 	samplePos = kIndex * outputs[NUM_OUTPUTS].value;
-
-	// 	for (int channel = 0; channel < outputs[NUM_OUTPUTS].value; ++channel)
-	// 	{
-	// 		outputs[channel].value = (spout[samplePos] / csScale);
-	// 		++samplePos;
-	// 	}
-	// }
-
-	//outputs[OUTPUT1].value = 0.f;
-	// ksmps++;
-	// Blink light at 1Hz
-	// blinkPhase += deltaTime;
-	// if (blinkPhase >= 1.0)
-	// 	blinkPhase -= 1.0;
-	// lights[BLINK_LIGHT].value = (blinkPhase < 0.5) ? 1.0 : 0.0;
-}
-
-
-MyModuleWidget::MyModuleWidget() {
+//============================================================
+// MyModuleWidget implementation
+//============================================================
+MyModuleWidget::MyModuleWidget() 
+{
 	CabbageRack *module = new CabbageRack();
 	setModule(module);
-	box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-
+	int kRateControlIndex = 0;
+	int aRateInputIndex = 0;
+	int aRateOutputIndex = 0;
+	int lightIndex = 0;
+	int width, height, centre;
+	
+	for( auto& control : module->cabbageControls)
 	{
-		SVGPanel *panel = new SVGPanel();
-		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/MyModule.svg")));
-		addChild(panel);
+		if(control.type == "form")
+		{
+			addChild(new CabbageForm(control));
+			box.size = Vec(control.width, control.height);
+			width = box.size.x;
+			height = box.size.y;
+			centre = width/2;			
+		}
+
+		else if(control.type == "label")
+			addChild(new CabbageLabel(control));
+
+		else if(control.type == "groupbox")
+			addChild(new CabbageGroupbox(control));
+
+		else if(control.type == "image")
+			addChild(new CabbageImage(control));
+
+		else if(control.type == "cvinput")
+			addInput(new CabbagePort(control, module, aRateInputIndex++));	
+
+		else if(control.type == "cvoutput")
+			addOutput(new CabbagePort(control, module, aRateOutputIndex++));
+
+		else if(control.type == "light")
+		 	addChild(new CabbageLight(control, module, lightIndex++));		
+
+		else if(control.hasChannel)
+		{
+			if(control.type == "rslider")
+				addParam(new CabbageRotarySlider(control, module, kRateControlIndex++));			
+
+			else if(control.type == "button")
+				addParam(new CabbageButton(control, module, kRateControlIndex++));
+			
+			else if(control.type == "checkbox")
+				addParam(new CabbageCheckbox(control, module, kRateControlIndex++));	
+
+			else if(control.type == "combobox")
+				addParam(new CabbageCombobox(control, module, kRateControlIndex++));				
+		}	
+	
 	}
 
-	addChild(createScrew<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
-	addChild(createScrew<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-	addChild(createScrew<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-	addChild(createScrew<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+	addChild(createScrew<ScrewSilver>(Vec(0, 0)));
+	addChild(createScrew<ScrewSilver>(Vec(box.size.x - 16, 0)));
+	addChild(createScrew<ScrewSilver>(Vec(0, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+	addChild(createScrew<ScrewSilver>(Vec(box.size.x - 16, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-	addParam(createParam<Davies1900hBlackKnob>(Vec(28, 87), module, CabbageRack::PITCH_PARAM, -3.0, 3.0, 0.0));
-
-	addInput(createInput<PJ301MPort>(Vec(33, 186), module, CabbageRack::PITCH_INPUT));
-
-	addOutput(createOutput<PJ301MPort>(Vec(33, 275), module, CabbageRack::OUTPUT1));
-
-	addChild(createLight<MediumLight<RedLight>>(Vec(41, 59), module, CabbageRack::BLINK_LIGHT));
 }
+
+//============================================================
+// CabbageRack implementation
+//============================================================
+CabbageRack::CabbageRack() : 
+	Module(1, 2, 2, 2)
+{
+	createAndCompileCsound();                
+	params.resize(numControlChannels);  
+	inputs.resize(audioInputControls.size());
+	lights.resize(numLights);
+	outputs.resize(audioOutputControls.size());              
+	csound->SetMessageCallback(MessageCallback);
+}
+
+void CabbageRack::createAndCompileCsound() 
+{
+	csound = new Csound(); 
+	csound->SetOption((char*)"-n");
+	csound->SetOption((char*)"-d");
+
+
+	CSOUND_PARAMS* csoundParams = nullptr;
+	csoundParams = new CSOUND_PARAMS();
+	csoundParams->sample_rate_override = engineGetSampleRate();
+	csoundParams->displays = 0;		
+	csound->SetParams(csoundParams);
+	csound->SetHostImplementedAudioIO(1, 0);
+	csound->SetHostData(this);
+
+	const string csdFileName(plugin->path+ "/" +plugin->path.substr(plugin->path.find("/", 3)+1)+".csd");
+	compileError = csound->Compile(csdFileName.c_str());
+
+	cabbageControls = CabbageParser::getCabbageControlVector(csdFileName);
+	numControlChannels = CabbageParser::getNumberOfControlChannels(cabbageControls);
+	numLights = CabbageParser::getNumberOfLights(cabbageControls);
+	
+	audioOutputControls = CabbageParser::getAudioChannels(cabbageControls, "cvoutput");
+	audioInputControls = CabbageParser::getAudioChannels(cabbageControls, "cvinput");
+
+	if(compileError != 0)
+		cout << "Csound could not compile" << endl;
+	else
+	{    
+		ksmps = csound->GetKsmps();
+		audioOutputChannels = new MYFLT*[audioOutputControls.size()];
+		audioInputChannels = new MYFLT*[audioInputControls.size()];
+
+		for( int i = 0 ; i < audioOutputControls.size() ; i++)
+		{
+			audioOutputChannels[i] = new MYFLT[ksmps];
+			csoundGetChannelPtr(csound->GetCsound(), &audioOutputChannels[i], audioOutputControls[i].channel.c_str(),
+                            CSOUND_AUDIO_CHANNEL | CSOUND_OUTPUT_CHANNEL);
+		}
+        	
+		for( int i = 0 ; i < audioInputControls.size() ; i++)
+		{
+			audioInputChannels[i] = new MYFLT[ksmps];
+			csoundGetChannelPtr(csound->GetCsound(), &audioInputChannels[i], audioInputControls[i].channel.c_str(),
+                           CSOUND_AUDIO_CHANNEL | CSOUND_INPUT_CHANNEL);
+		}      	
+
+		for ( auto& control : cabbageControls)
+			csound->SetChannel(control.channel.c_str(), control.value);
+
+		csScale = csound->Get0dBFS();
+	}	
+}
+
+void CabbageRack::step() 
+{
+	if(compileError==0)
+	{		
+		if(kIndex == ksmps)
+		{
+			kIndex = 0;
+			compileError = csound->PerformKsmps();
+
+			int controlIndex = 0;
+			int lightIndex = 0;
+
+			if(compileError == 0)
+			{
+				for( int i = 0 ; i < (int)cabbageControls.size();i++)
+					if(cabbageControls[i].hasChannel)
+						csound->SetChannel(cabbageControls[i].channel.c_str(), params[controlIndex++].value);	
+					else if(cabbageControls[i].isLight)
+					 	lights[lightIndex++].value = csound->GetChannel(cabbageControls[i].channel.c_str());			
+
+			}
+		}
+		
+		for ( int i = 0 ; i < audioInputControls.size() ; i++)
+			audioInputChannels[i][kIndex] = inputs[i].value;	
+		for ( int i = 0 ; i < audioOutputControls.size() ; i++)
+			outputs[i].value = (audioOutputChannels[i][kIndex] / csScale ) * 10.f;	
+		
+		kIndex++;
+	}
+}
+
+
+

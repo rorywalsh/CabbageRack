@@ -7,11 +7,33 @@ VERSION = 0.5.0
 # FLAGS will be passed to both the C and C++ compiler
 FLAGS +=
 CFLAGS +=
-CXXFLAGS += -I /Library/Frameworks/CsoundLib64.framework/Headers 
+
+ifndef ARCH
+	ARCH=lin
+endif 
+
+#CXXFLAGS += -I /Library/Frameworks/CsoundLib64.framework/Headers 
+#LDFLAGS +=   -F /Library/Frameworks/ -framework CsoundLib64 -rpath
+
+ifeq ($(ARCH), win)
+    CSOUND_INCLUDE ?= "c:\PROGRA~1\Csound6_x64\include"
+    CSOUND_LIBRARY ?= "c:\PROGRA~1\Csound6_x64\lib\csound64.lib"
+	CXXFLAGS += -I $(CSOUND_INCLUDE)
+    LDFLAGS += $(CSOUND_LIBRARY)
+endif
+
+ifeq ($(ARCH), lin)
+	CXXFLAGS += -I /usr/local/include/csound
+	LDFLAGS += -L /usr/loca/lib -lcsound64
+endif
+
+#CXXFLAGS += -I /Library/Frameworks/CsoundLib64.framework/Headers 
 
 # Careful about linking to shared libraries, since you can't assume much about the user's environment and library search path.
 # Static libraries are fine.
-LDFLAGS +=   -F /Library/Frameworks/ -framework CsoundLib64 -rpath
+
+
+#LDFLAGS +=   -F /Library/Frameworks/ -framework CsoundLib64 -rpath
 
 # Add .cpp and .c files to the build
 SOURCES += $(wildcard src/*.cpp)
