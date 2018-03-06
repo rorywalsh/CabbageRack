@@ -10,8 +10,14 @@ To build, follow the instructions [here](https://vcvrack.com/manual/PluginDevelo
 ```
 git clone https://github.com/rorywalsh/CabbageRack
 cd CabbageRack
-./build.sh
 ```
+
+Then call the appropriate makefile for your platform by using the -f filename command line option to make:
+```
+make -f Makefile.win
+```
+
+> just call ```make``` on its own to build for Linux. 
 
 The build script uses the locations for the Csound headers and libraries. if you install to custom location, update the makefiles.  
 
