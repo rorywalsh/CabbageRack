@@ -5,7 +5,7 @@
 
 ## Building 
 
-To build, follow the instructions [here](https://vcvrack.com/manual/PluginDevelopmentTutorial.html) to compile and build the template plugin. Then cd to `Rack/plugins/` and run 
+To build, follow the instructions [here](https://vcvrack.com/manual/PluginDevelopmentTutorial.html)(for v0.5) to compile and build the template plugin. Then cd to `Rack/plugins/` and run 
 
 ```
 git clone https://github.com/rorywalsh/CabbageRack
