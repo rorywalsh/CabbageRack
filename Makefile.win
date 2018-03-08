@@ -9,7 +9,7 @@ FLAGS +=
 CFLAGS +=
 
 
-CSOUND_INCLUDE ?= "c:\PROGRA~1\Csound6_x64\include"
+CSOUND_INCLUDE ?= "c:\PROGRA~1\Csound6_x64\include\csound"
 CSOUND_LIBRARY ?= "c:\PROGRA~1\Csound6_x64\lib\csound64.lib"
 CXXFLAGS += -I $(CSOUND_INCLUDE)
 LDFLAGS += $(CSOUND_LIBRARY)
