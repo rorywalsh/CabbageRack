@@ -16,10 +16,18 @@ LDFLAGS += $(CSOUND_LIBRARY)
 
 
 SOURCES += $(wildcard src/*.cpp)
-DISTRIBUTABLES += $(wildcard LICENSE*) res
+
+DISTRIBUTABLES += $(wildcard LICENSE*) res $(wildcard README*)
 
 
+# If RACK_DIR is not defined when calling the Makefile, default to two levels above
 RACK_DIR ?= ../..
 
 # Include the VCV Rack plugin Makefile framework
 include $(RACK_DIR)/plugin.mk
+
+dist:
+	rm -rf dist
+	mkdir -p dist/$(SLUG)
+	cp -R $(DISTRIBUTABLES) dist/$(SLUG)/
+	cd dist && zip -5 -r $(SLUG)-$(VERSION)-$(ARCH).zip $(SLUG)
