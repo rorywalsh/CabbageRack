@@ -1,6 +1,5 @@
 # build artifacts
 build/
-dist/
 
 # compiled plugin
 plugin.dylib
