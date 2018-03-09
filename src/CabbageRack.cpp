@@ -86,7 +86,7 @@ CabbageRack::CabbageRack() :
 	inputs.resize(audioInputControls.size());
 	lights.resize(numLights);
 	outputs.resize(audioOutputControls.size());              
-	//csound->SetMessageCallback(MessageCallback);
+	csound->SetMessageCallback(MessageCallback);
 }
 
 void CabbageRack::createAndCompileCsound() 

@@ -138,6 +138,7 @@ struct CabbageControl
 		else if(type == "cvinput" || type == "cvoutput")
 		{
 			colour = nvgRGBA(20, 20, 20, 255);
+			fontColour = nvgRGBA(0, 0, 0, 255);
 			outlineColour = nvgRGBA(180, 180, 180, 255);
 			text.push_back("");
 		}

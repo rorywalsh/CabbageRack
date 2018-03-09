@@ -515,7 +515,7 @@ struct CabbagePort : Port, FramebufferWidget
 		nvgTextLetterSpacing(vg, -2);
 		nvgFillColor(vg, fontcolour);
 		nvgTextAlign(vg, NVG_ALIGN_CENTER);
-		nvgTextBox(vg, 0, box.size.y-5, box.size.x, text.c_str(), NULL);
+		nvgTextBox(vg, 0, box.size.y+10, box.size.x, text.c_str(), NULL);
 		nvgBeginPath(vg);
         nvgCircle(vg, box.size.x/2, box.size.y/2, 10);
         nvgFillColor(vg, nvgRGBA(80, 80, 80, 255));
