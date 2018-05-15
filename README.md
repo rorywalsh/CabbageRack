@@ -1,5 +1,5 @@
 # Cabbage for VCV RACK 
-(work in progress - not ready for public consumption!)
+(work in progress - use at your own risk!)
 
 ![sample screenshot](https://github.com/rorywalsh/CabbageRack/blob/master/example.gif)
 
