@@ -1,5 +1,5 @@
 # Cabbage for VCV RACK 
-(work in progress - use at your own risk!)
+(THIS WILL NOT WORK WITH THE LATEST VERSION OF THE VCV-RACK SDK! I WILL TRY TO UPDATE IT SOON...)
 
 ![sample screenshot](https://github.com/rorywalsh/CabbageRack/blob/master/example.gif)
 
