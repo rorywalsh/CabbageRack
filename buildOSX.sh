@@ -45,4 +45,4 @@ echo "--------------------------"
 ls
 
 
-cp -rf dist $BUILD_ARTIFACTSTAGINGDIRECTORY/OSXDist
+cp -rf dist/CabbageRack-1.0.0-mac $BUILD_ARTIFACTSTAGINGDIRECTORY/CabbageRack-1.0.0-mac
