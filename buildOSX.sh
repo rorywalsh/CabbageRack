@@ -19,9 +19,13 @@ unzip -q Rack-SDK-1.1.4.zip
 ls
 cp -rf s Rack-SDK/CabbageRack
 cd Rack-SDK
+echo "---------------------------_"
 ls
+echo "---------------------------_"
 cd CabbageRack
 ls
+echo "---------------------------_"
+
 make clean
 make -f Makefile.osx
 cp dist $BUILD_ARTIFACTSTAGINGDIRECTORY/OSXDist
