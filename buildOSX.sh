@@ -40,5 +40,9 @@ ls
 echo "---------------------------_"
 
 make -f Makefile.osx clean
-make -f Makefile.osx
+make dist -f Makefile.osx
+echo "--------------------------"
+ls
+
+
 cp dist $BUILD_ARTIFACTSTAGINGDIRECTORY/OSXDist
