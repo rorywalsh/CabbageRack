@@ -12,4 +12,4 @@ dir
 cd D:/a/1/
 
 dir
-cmd.exe //C RefreshEnv.cmd & C:/tools/msys64/msys2_shell.cmd -defterm -mingw64 -no-start -full-path -here -c "pacman -Su"
+pacman -Su
