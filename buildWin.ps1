@@ -12,4 +12,4 @@ dir
 cd D:/a/1/
 
 dir
-bash -c "pacman -Su"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy --needed msys2-runtime"
