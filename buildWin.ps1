@@ -4,7 +4,7 @@ dir
 # 7z.exe x csound-windows_x64-6.12.0.zip -o"C:/Program Files"
 # cd "C:/Program Files/Csound6_x64"
 # dir
-choco install -y msys2 --params "/InstallDir:C:\tools\msys64"
+# choco install -y msys2 --params "/InstallDir:C:\tools\msys64"
 Invoke-WebRequest -Uri "https://vcvrack.com/downloads/Rack-SDK-1.1.4.zip" -OutFile "D:/a/Rack-SDK-1.1.4.zip" 
 cd D:/a
 7z.exe x D:/a/Rack-SDK-1.1.4.zip -o"D:/a"
