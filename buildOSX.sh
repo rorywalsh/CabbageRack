@@ -26,6 +26,6 @@ cd CabbageRack
 ls
 echo "---------------------------_"
 
-make clean
+make -f Makefile.osx clean
 make -f Makefile.osx
 cp dist $BUILD_ARTIFACTSTAGINGDIRECTORY/OSXDist
