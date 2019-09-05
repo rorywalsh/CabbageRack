@@ -11,8 +11,10 @@ echo "BUILD_ARTIFACTSTAGINGDIRECTORY is $BUILD_ARTIFACTSTAGINGDIRECTORY"
 echo "BUILD_ARTIFACTSTAGINGDIRECTORY contents:"
 ls -1 $BUILD_ARTIFACTSTAGINGDIRECTORY
 
+#install deps for VCV Rack development
 brew install git wget cmake autoconf automake libtool jq python
 
+#install Csound
 curl -L -o csound6.13.0-MacOS_x86_64.dmg 'https://github.com/csound/csound/releases/download/6.13.0/csound6.13.0-MacOS_x86_64.dmg'
 ls
 hdiutil attach csound6.13.0-MacOS_x86_64.dmg
@@ -21,6 +23,8 @@ hdiutil detach /Volumes/Csound6.13.0/
 cd Csound
 sudo installer -pkg csound6.13.0-MacOS_x86_64.pkg -target /
 
+#return to main working dir after installing Csound
+$SYSTEM_DEFAULTWORKINGDIRECTORY
 cd ..
 
 curl -L -o Rack-SDK-1.1.4.zip 'https://vcvrack.com/downloads/Rack-SDK-1.1.4.zip'
