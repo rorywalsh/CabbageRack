@@ -45,4 +45,4 @@ echo "--------------------------"
 ls
 echo "--------------------------"
 ls dist
-cp -rf dist/CabbageRack-1.0.0-mac.zip $BUILD_ARTIFACTSTAGINGDIRECTORY/CabbageRack-1.0.0-mac
+cp -rf dist/CabbageRack-1.0.0-mac.zip $BUILD_ARTIFACTSTAGINGDIRECTORY/CabbageRack-1.0.0-mac.zip
