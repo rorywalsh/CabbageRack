@@ -12,4 +12,9 @@ echo "BUILD_ARTIFACTSTAGINGDIRECTORY contents:"
 ls -1 $BUILD_ARTIFACTSTAGINGDIRECTORY
 
 brew install git wget cmake autoconf automake libtool jq python
+cd ..
 
+curl -L -o Rack-SDK-1.1.4.zip 'https://vcvrack.com/downloads/Rack-SDK-1.1.4.zip'
+unzip unzip -q Rack-SDK-1.1.4.zip
+ls
+cp -rf CabbageRack Rack-SDK/CabbageRack
