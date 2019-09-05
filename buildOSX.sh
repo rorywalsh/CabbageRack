@@ -45,4 +45,4 @@ echo "--------------------------"
 ls
 
 
-cp dist $BUILD_ARTIFACTSTAGINGDIRECTORY/OSXDist
+cp -rf dist $BUILD_ARTIFACTSTAGINGDIRECTORY/OSXDist
