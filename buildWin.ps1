@@ -5,7 +5,10 @@ dir
 # cd "C:/Program Files/Csound6_x64"
 # dir
 
-
+Invoke-WebRequest -Uri "https://vcvrack.com/downloads/Rack-SDK-1.1.4.zip" -OutFile "D:/a/Rack-SDK-1.1.4.zip" 
+cd D:/a
+7z.exe x D:/a/Rack-SDK-1.1.4.zip -o"D:/a"
+dir
 cd D:/a/1/
 
 dir
