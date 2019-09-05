@@ -11,10 +11,9 @@
 #include <algorithm>
 
 using namespace rack;
-using namespace std;
 
 enum Range {
-	min, max, value	
+	min, max, value, skew, increment	
 };
 
 enum Colour {
@@ -37,13 +36,13 @@ struct CabbageControl
 	std::vector<float> range = {0, 1, 0, 1, .01};
 	int width, height, corners=3;
 	float value = 0.f;
-	string channel, label, caption, type;
-	vector<string> text;
+	std::string channel, label, caption, type;
+	std::vector<std::string> text;
 	bool hasChannel = false;
 	bool isLight = false;
-	string file = "";
+	std::string file = "";
 
-	CabbageControl(string type)
+	CabbageControl(std::string type)
 	{
 		//set defaults for each type of widget
 		if(type == "rslider")
@@ -55,8 +54,21 @@ struct CabbageControl
 			range[Range::min] = 0;
 			range[Range::max] = 1;
 			range[Range::value] = 0;
+
 			bounds = {0, 0, 80, 80};
 			range = {0, 1, 0, 1, .01};
+			channel = "rslider_";
+			hasChannel = true;
+			text.push_back("");	
+		}
+		else if(type == "cslider")
+		{
+			colour = nvgRGBA(220, 220, 220, 255);
+			trackerColour = nvgRGBA(147, 210, 0, 255);
+			outlineColour = nvgRGBA(25, 25, 25, 255);
+			textColour = nvgRGBA(255, 255, 255, 255);
+			bounds = {0, 0, 80, 80};
+			range = {0, 1, 0, 1, 1};
 			channel = "rslider_";
 			hasChannel = true;
 			text.push_back("");	
@@ -70,10 +82,7 @@ struct CabbageControl
 			bounds = {0, 0, 80, 30};
 			range = {0, 1, 0, 1, 1};
 			hasChannel = true;
-			channel = "button_";
-			range[Range::min] = 0;
-			range[Range::max] = 1;
-			range[Range::value] = 0;			
+			channel = "button_";		
 		}
 		else if(type == "checkbox")
 		{
@@ -87,9 +96,6 @@ struct CabbageControl
 			hasChannel = true;
 			channel = "checkbox_";
 			value = 0;
-			range[Range::min] = 0;
-			range[Range::max] = 1;
-			range[Range::value] = 0;
 		}
 		else if(type == "label")
 		{
@@ -147,11 +153,11 @@ struct CabbageControl
 
 struct CabbageParser
 {
-	static int* getColourFromText(string colIdent, string line)
+	static int* getColourFromText(std::string colIdent, std::string line)
 	{
-		const string colourIdentifier = colIdent+"(";
+		const std::string colourIdentifier = colIdent+"(";
 		static int colourArray[4] = {255,255,255,255};
-		string colour = line.substr(line.find(colourIdentifier) + colourIdentifier.size());
+		std::string colour = line.substr(line.find(colourIdentifier) + colourIdentifier.size());
 		colour = colour.substr(0, colour.find(")"));
 		const int numArgs = std::count(colour.begin(), colour.end(), ',');
 		char *p = strtok(&colour[0u], ",");
@@ -171,21 +177,23 @@ struct CabbageParser
 		return colourArray;
 	}
 
-	static string getParameter(string line, string identifier)
+	static std::string getParameter(std::string line, std::string identifier)
 	{
 		if (line.find(identifier) != std::string::npos)
 		{
-			string value = line.substr(line.find(identifier) + identifier.size());
+			std::string value = line.substr(line.find(identifier) + identifier.size());
 			value = value.substr(0, value.find(")"));
 			value.erase(std::remove(value.begin(), value.end(), '"'), value.end());
 			return value;
 		}
+
+        return std::string("");
 	}			
 
-	static string trim(const std::string& str,
+	static std::string trim(const std::string& str,
 					const std::string& whitespace = " \t")
 	{
-		int start = str.find_first_not_of(whitespace);
+		size_t start = str.find_first_not_of(whitespace);
 		if (start == std::string::npos)
 			return ""; // no content
 
@@ -195,22 +203,22 @@ struct CabbageParser
 		return str.substr(start, range);
 	}
 
-	static vector<CabbageControl> getCabbageControlVector(string csdFile)
+	static std::vector<CabbageControl> getCabbageControlVector(std::string csdFile)
 	{
-		vector<CabbageControl> cabbageControls;
-
+		std::vector<CabbageControl> cabbageControls;
 		std::ifstream input(csdFile.c_str());
-
 		std::string line;
 		while (std::getline(input, line))
 		{
+            
+
 			if (line.find("</") != std::string::npos)
 				break;
 
 			if(line.find(";") != 0)
 			{
-				string newLine = line;
-				string control = line.substr(0, line.find(" ") != std::string::npos ? line.find(" ") : 0);
+				std::string newLine = line;
+				std::string control = line.substr(0, line.find(" ") != std::string::npos ? line.find(" ") : 0);
 				std::string::size_type i = newLine.find(control);
 
 				if (i != std::string::npos)
@@ -227,22 +235,23 @@ struct CabbageParser
 					control.find("cvinput") != std::string::npos ||
 					control.find("cvoutput") != std::string::npos ||
 					control.find("combobox") != std::string::npos ||
+					control.find("cslider") != std::string::npos ||
 					control.find("label") != std::string::npos)
 				{
+                   
 					CabbageControl cabbageCtrl(control);
 					cabbageCtrl.type = control;
-					//init range
-
+			
 					if (line.find(" caption(") != std::string::npos)
 						cabbageCtrl.caption = getParameter(line, "caption(");
 
 					if (line.find(" text(") != std::string::npos)
 					{
-						string text = line.substr(line.find(" text(") + 7);
+						std::string text = line.substr(line.find(" text(") + 7);
 						text = text.substr(0, text.find(")") - 1);
 						text.erase(std::remove(text.begin(), text.end(), '\"'), text.end());
 						const int numArgs = std::count(text.begin(), text.end(), ',')+1;
-						int argIndex = 0;
+
 						if(numArgs>1)
 						{
 							char myString[32];
@@ -251,12 +260,20 @@ struct CabbageParser
 
 							while (p) 
 							{
-								cabbageCtrl.text.push_back(trim(string(p)));							
+								cabbageCtrl.text.push_back(trim(std::string(p)));							
 								p = strtok(NULL, ",");
 							}
+
 						}
 						else
 							cabbageCtrl.text[0] = text;
+						
+						if (cabbageCtrl.type == "combobox")
+							cabbageCtrl.range = {0, float(cabbageCtrl.text.size()), 0, 1, 1};
+						else if(cabbageCtrl.type == "cslider")
+							cabbageCtrl.range = {0, float(cabbageCtrl.text.size()-2), 0, 1, 1};
+
+
 					}
 
 					if (line.find(" channel(") != std::string::npos)
@@ -266,7 +283,7 @@ struct CabbageParser
 
 					if (line.find(" file(") != std::string::npos)
 					{
-						string file = getParameter(line, " file(");
+						std::string file = getParameter(line, " file(");
 						file.erase(std::remove(file.begin(), file.end(), '\"'), file.end());
 						cabbageCtrl.file = file;
 					}
@@ -315,7 +332,7 @@ struct CabbageParser
 
 					if (line.find(" bounds(") != std::string::npos)
 					{
-						string bounds = line.substr(line.find(" bounds(") + 8);
+						std::string bounds = line.substr(line.find(" bounds(") + 8);
 						bounds = bounds.substr(0, bounds.find(")"));
 						char *p = strtok(&bounds[0u], ",");
 						int argCount = 0;
@@ -331,14 +348,14 @@ struct CabbageParser
 
 					if (line.find(" size(") != std::string::npos)
 					{
-						string size = line.substr(line.find(" size(") + 6);
+						std::string size = line.substr(line.find(" size(") + 6);
 						cabbageCtrl.width = stoi(size.substr(0, size.find(",")));
 						cabbageCtrl.height = stoi(size.substr(size.find(",")+1, size.find(")")));
 					}
 
 					if (line.find(" range(") != std::string::npos)
 					{
-						string range = line.substr(line.find(" range(") + 7);
+						std::string range = line.substr(line.find(" range(") + 7);
 						range = range.substr(0, range.find(")"));
 						char *p = strtok(&range[0u], ",");
 						int argCount = 0;
@@ -346,7 +363,7 @@ struct CabbageParser
 						{
 							cabbageCtrl.range[argCount] = atof(p);
 							argCount++;
-							if (argCount == 3)
+							if (argCount == 5)
 								break;
 							p = strtok(NULL, ",");
 						}
@@ -366,7 +383,7 @@ struct CabbageParser
 		return cabbageControls;
 	}
 
-	static int getNumberOfControlChannels(vector<CabbageControl> csndChannels)
+	static int getNumberOfControlChannels(std::vector<CabbageControl> csndChannels)
 	{
 		int numberOfControlChannels = 0;
 
@@ -379,9 +396,9 @@ struct CabbageParser
 		return numberOfControlChannels;
 	}
 
-	static vector<CabbageControl> getAudioChannels(vector<CabbageControl> csndChannels, string type)
+	static std::vector<CabbageControl> getAudioChannels(std::vector<CabbageControl> csndChannels, std::string type)
 	{
-		vector<CabbageControl> chans;
+		std::vector<CabbageControl> chans;
 
 		for (auto channel : csndChannels)
 		{
@@ -392,7 +409,7 @@ struct CabbageParser
 		return chans;
 	}
 
-	static int getNumberOfLights(vector<CabbageControl> csndChannels)
+	static int getNumberOfLights(std::vector<CabbageControl> csndChannels)
 	{
 		int numberOfLights = 0;
 

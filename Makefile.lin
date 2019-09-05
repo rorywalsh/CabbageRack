@@ -5,8 +5,8 @@ RACK_DIR ?= ../
 FLAGS +=
 CFLAGS +=
 
-CXXFLAGS += -I /Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers 
-LDFLAGS +=   -F /Library/Frameworks/ -framework CsoundLib64 -rpath
+CXXFLAGS += -I /usr/local/include/csound
+LDFLAGS += -L /usr/loca/lib -lcsound64
 
 
 # Add .cpp and .c files to the build
