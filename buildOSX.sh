@@ -18,3 +18,7 @@ curl -L -o Rack-SDK-1.1.4.zip 'https://vcvrack.com/downloads/Rack-SDK-1.1.4.zip'
 unzip -q Rack-SDK-1.1.4.zip
 ls
 cp -rf s Rack-SDK/CabbageRack
+cd Rack-SDK
+ls
+cd CabbageRack
+make -f Makefile.osx
