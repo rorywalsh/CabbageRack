@@ -12,4 +12,4 @@ dir
 cd D:/a/1/
 
 dir
-pacman -Su
+bash -c "pacman -Su"
