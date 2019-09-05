@@ -1,6 +1,5 @@
 # If RACK_DIR is not defined when calling the Makefile, default to two levels above
-RACK_DIR ?= ../..
-
+RACK_DIR ?= ../
 # FLAGS will be passed to both the C and C++ compiler
 FLAGS +=
 CFLAGS +=
@@ -17,4 +16,4 @@ SOURCES += $(wildcard src/*.cpp)
 DISTRIBUTABLES += $(wildcard LICENSE*) res $(wildcard README*)
 
 # Include the VCV Rack plugin Makefile framework
-include $(RACK_DIR)/plugin.mk
+include ../plugin.mk
