@@ -13,4 +13,16 @@ cd D:/a/1/
 
 dir
 C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Syu"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Syu git wget make tar unzip zip mingw-w64-x86_64-gcc mingw-w64-x86_64-gdb mingw-w64-x86_64-cmake autoconf automake mingw-w64-x86_64-libtool mingw-w64-x86_64-jq python"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy git"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy wget"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy make"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy tar"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy unzip"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-gcc"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy zip"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-gdb"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-cmake"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy autoconf"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy automake"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-libtool"
+C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-jq"
