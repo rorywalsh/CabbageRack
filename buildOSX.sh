@@ -43,6 +43,6 @@ make -f Makefile.osx clean
 make dist -f Makefile.osx
 echo "--------------------------"
 ls
-
-
-cp -rf dist/CabbageRack-1.0.0-mac $BUILD_ARTIFACTSTAGINGDIRECTORY/CabbageRack-1.0.0-mac
+echo "--------------------------"
+ls dist
+cp -rf dist/CabbageRack-1.0.0-mac.zip $BUILD_ARTIFACTSTAGINGDIRECTORY/CabbageRack-1.0.0-mac
