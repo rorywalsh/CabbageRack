@@ -9,20 +9,24 @@ Invoke-WebRequest -Uri "https://vcvrack.com/downloads/Rack-SDK-1.1.4.zip" -OutFi
 cd D:/a
 7z.exe x D:/a/Rack-SDK-1.1.4.zip -o"D:/a"
 dir
-cd D:/a/1/
-
+Get-ChildItem -Path "D:/a/1" | Copy-Item -Destination "D:/a/Rack-SDK/CabbageRack" -Recurse -Container
+cd D:/a/Rack-SDK
 dir
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Syu"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy git"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy wget"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy make"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy tar"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy unzip"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-gcc"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy zip"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-gdb"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-cmake"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy autoconf"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy automake"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-libtool"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-jq"
+
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Syu"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy git"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy wget"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy make"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy tar"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy unzip"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-gcc"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy zip"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-gdb"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-cmake"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy autoconf"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy automake"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-libtool"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-jq"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy python"
+
+
