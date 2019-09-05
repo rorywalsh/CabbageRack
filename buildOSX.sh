@@ -21,4 +21,7 @@ cp -rf s Rack-SDK/CabbageRack
 cd Rack-SDK
 ls
 cd CabbageRack
+ls
+make clean
 make -f Makefile.osx
+cp dist $BUILD_ARTIFACTSTAGINGDIRECTORY/OSXDist
