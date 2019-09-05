@@ -12,6 +12,15 @@ echo "BUILD_ARTIFACTSTAGINGDIRECTORY contents:"
 ls -1 $BUILD_ARTIFACTSTAGINGDIRECTORY
 
 brew install git wget cmake autoconf automake libtool jq python
+
+curl -L -o csound6.13.0-MacOS_x86_64.dmg 'https://github.com/csound/csound/releases/download/6.13.0/csound6.13.0-MacOS_x86_64.dmg'
+ls
+hdiutil attach csound6.13.0-MacOS_x86_64.dmg
+cp -R /Volumes/Csound6.13.0/ Csound
+hdiutil detach /Volumes/Csound6.13.0/
+cd Csound
+sudo installer -pkg csound6.13.0-MacOS_x86_64.pkg -target /
+
 cd ..
 
 curl -L -o Rack-SDK-1.1.4.zip 'https://vcvrack.com/downloads/Rack-SDK-1.1.4.zip'
