@@ -30,6 +30,7 @@ C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-jq --noconfi
 C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy python --noconfirm"
 
 cd D:/a/Rack-SDK/CabbageRack
+dir
 C:\tools\msys64\usr\bin\bash.exe -l -c "make -f Makefile.win"
 
 
