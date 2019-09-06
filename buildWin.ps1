@@ -12,7 +12,7 @@ dir
 Get-ChildItem -Path "D:/a/1" | Copy-Item -Destination "D:/a/Rack-SDK/CabbageRack" -Recurse -Container
 cd D:/a/Rack-SDK
 dir
-Invoke-Item  C:\tools\msys64\usr\bin\msys2_shell.cmd -mingw64 -c "help |more"
+Invoke-Item  "C:\tools\msys64\usr\bin\msys2_shell.cmd -mingw64 -c ""help |more""
 # C:\tools\msys64\usr\bin\bash.exe -lc "echo --------1;ls;echo -----------2;cd /D; echo -----------3 ls; echo ---------4;"
 
 # C:\tools\msys64\usr\bin\bash.exe -lc "cd /d/a/Rack-SDK/CabbageRack;echo ++++++++++++++++++++++;ls"
