@@ -28,9 +28,8 @@ C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy automake --noconfirm"
 C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-libtool --noconfirm"
 C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-jq --noconfirm"
 C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy python --noconfirm"
-
-cd D:/a/Rack-SDK/CabbageRack
-dir
+C:\tools\msys64\usr\bin\bash.exe -l -c "cd /d/a/Rack-SDK/CabbageRack"
+C:\tools\msys64\usr\bin\bash.exe -l -c "ls"
 C:\tools\msys64\usr\bin\bash.exe -l -c "make -f Makefile.win"
 
 
