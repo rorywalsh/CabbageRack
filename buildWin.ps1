@@ -13,24 +13,28 @@ Get-ChildItem -Path "D:/a/1" | Copy-Item -Destination "D:/a/Rack-SDK/CabbageRack
 cd D:/a/Rack-SDK
 dir
 
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Syu --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy git --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy wget --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy make --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy tar --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy unzip --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-gcc --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy zip --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-gdb --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-cmake --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy autoconf --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy automake --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-libtool --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-jq --noconfirm"
-C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy python --noconfirm"
 C:\tools\msys64\usr\bin\bash.exe -l -c "cd /d/a/Rack-SDK/CabbageRack"
 C:\tools\msys64\usr\bin\bash.exe -l -c "ls"
 C:\tools\msys64\usr\bin\bash.exe -l -c "make -f Makefile.win"
+
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Syu --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy git --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy wget --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy make --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy tar --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy unzip --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-gcc --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy zip --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-gdb --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-cmake --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy autoconf --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy automake --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-libtool --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy mingw-w64-x86_64-jq --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "pacman -Sy python --noconfirm"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "cd /d/a/Rack-SDK/CabbageRack"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "ls"
+# C:\tools\msys64\usr\bin\bash.exe -l -c "make -f Makefile.win"
 
 
 
