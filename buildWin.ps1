@@ -32,5 +32,7 @@ C:\tools\msys64\usr\bin\bash.exe -lc "echo ++++++++++++++++++++++"
 C:\tools\msys64\usr\bin\bash.exe -lc "ls"
 C:\tools\msys64\usr\bin\bash.exe -lc "cd /d/a;ls;cd Rack-SDK;cd CabbageRack;ls;make -f Makefile.win dist;ls dist"
 
+Copy-Item "D:/a/Rack-SDK/CabbageRack/dist/CabbageRack-1.0.0-win.zip" -Destination "$BUILD_ARTIFACTSTAGINGDIRECTORY/CabbageRack-1.0.0-mac.zip" -Recurse 
+
 
 
