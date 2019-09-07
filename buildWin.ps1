@@ -13,7 +13,7 @@ Get-ChildItem -Path "D:/a/1" | Copy-Item -Destination "D:/a/Rack-SDK/CabbageRack
 cd D:/a/Rack-SDK
 dir
 
-C:\tools\msys64\usr\bin\bash.exe -lc "cd /d/a;ls;cd Rack-SDK;ls"
+C:\tools\msys64\usr\bin\bash.exe -lc "cd /d/a;ls;cd Rack-SDK;cd CabbageRack;ls"
 
 # C:\tools\msys64\usr\bin\bash.exe -lc "cd /d/a/Rack-SDK/CabbageRack;echo ++++++++++++++++++++++;ls"
 
