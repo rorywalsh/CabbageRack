@@ -9,7 +9,7 @@ Invoke-WebRequest -Uri "https://vcvrack.com/downloads/Rack-SDK-1.1.4.zip" -OutFi
 cd D:/a
 7z.exe x D:/a/Rack-SDK-1.1.4.zip -o"D:/a"
 dir
-Get-ChildItem -Path "D:/a/1/s/" | Copy-Item -Destination "D:/a/Rack-SDK/CabbageRack" -Recurse -Container
+Get-ChildItem -Path "D:/a/1/s/" | Copy-Item -Destination "D:/a/Rack-SDK/CabbageRack" -force -Recurse -Container
 cd D:/a/Rack-SDK
 dir
 cd D:/a/Rack-SDK/CabbageRack
