@@ -14,7 +14,7 @@ cd D:/a/Rack-SDK
 dir
 cd D:/a/Rack-SDK/CabbageRack
 
-C:\tools\msys64\usr\bin\bash.exe -lc "cd /d/a;ls;cd Rack-SDK;cd CabbageRack;ls;"
+C:\tools\msys64\usr\bin\bash.exe -lc "cd /d/a;ls;cd Rack-SDK;cd CabbageRack;ls;make -f Makefile.win dist;ls dist"
 
 # C:\tools\msys64\usr\bin\bash.exe -lc "cd /d/a/Rack-SDK/CabbageRack;echo ++++++++++++++++++++++;ls"
 
