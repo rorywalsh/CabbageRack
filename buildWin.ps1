@@ -31,7 +31,7 @@ C:\tools\msys64\usr\bin\bash.exe -lc "pacman -Sy mingw-w64-x86_64-jq --noconfirm
 C:\tools\msys64\usr\bin\bash.exe -lc "echo ++++++++++++++++++++++"
 C:\tools\msys64\usr\bin\bash.exe -lc "ls"
 C:\tools\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -full-path -here -c "make -f Makefile.win dist"
-Copy-Item "D:/a/Rack-SDK/CabbageRack/dist/CabbageRack-1.0.0-win.zip" -Destination "$BUILD_ARTIFACTSTAGINGDIRECTORY/CabbageRack-1.0.0-mac.zip" -Recurse 
+Copy-Item "D:/a/Rack-SDK/CabbageRack/dist/CabbageRack-1.0.0-win.zip" -Destination "$BUILD_ARTIFACTSTAGINGDIRECTORY/CabbageRack-1.0.0-win.zip" -Recurse 
 
 
 
