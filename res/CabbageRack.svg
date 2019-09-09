@@ -1,87 +1,57 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="60.48mm"
-   height="128.5mm"
-   viewBox="0 0 60.480004 128.50002"
-   version="1.1"
-   id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="CabbageRack.svg">
-  <defs
-     id="defs2" />
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="342.70745"
-     inkscape:cy="191.1767"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     showgrid="false"
-     units="mm"
-     inkscape:snap-bbox="true"
-     inkscape:snap-page="true"
-     inkscape:bbox-nodes="false"
-     inkscape:snap-bbox-edge-midpoints="false"
-     inkscape:window-width="1600"
-     inkscape:window-height="900"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="0"
-     inkscape:snap-bbox-midpoints="true"
-     inkscape:snap-nodes="false" />
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(0,-168.49998)">
-    <rect
-       style="display:inline;opacity:1;vector-effect:none;fill:#e6e6e6;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.92025763;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-       id="rect420"
-       width="61.215996"
-       height="128.5"
-       x="-0.26726836"
-       y="168.2327" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:6.81643105px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.17041077"
-       x="1.1060824"
-       y="165.11203"
-       id="text3745"
-       transform="scale(0.9377013,1.0664377)"><tspan
-         sodipodi:role="line"
-         id="tspan3743"
-         x="1.1060824"
-         y="165.11203"
-         style="stroke-width:0.17041077">Cabbage</tspan></text>
-  </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer2"
-     inkscape:label="components" />
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"
+	 id="svg11003" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" sodipodi:docname="LFO-1.svg" inkscape:version="0.92.2 5c3e80d, 2017-08-06"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="311.613px" height="380px"
+	 viewBox="0 0 311.613 380" enable-background="new 0 0 311.613 380" xml:space="preserve">
+<sodipodi:namedview  units="px" fit-margin-left="0" fit-margin-top="0" showgrid="false" inkscape:cy="375.61948" inkscape:cx="81.422936" inkscape:zoom="11.2" borderopacity="1.0" bordercolor="#666666" pagecolor="#ffffff" id="base" inkscape:window-maximized="0" inkscape:window-y="18" inkscape:window-x="0" inkscape:window-height="1422" inkscape:window-width="2560" inkscape:current-layer="layer1" inkscape:document-units="mm" inkscape:pageopacity="0.0" fit-margin-right="0" fit-margin-bottom="0" inkscape:pageshadow="2">
+	</sodipodi:namedview>
+<rect fill="#505050" stroke="#000000" stroke-miterlimit="10" width="311.613" height="380"/>
+<sodipodi:namedview  gridtolerance="10" guidetolerance="10" objecttolerance="10" showgrid="false" inkscape:cy="105.04866" inkscape:cx="-236.72085" inkscape:zoom="0.536391" borderopacity="1" bordercolor="#666666" pagecolor="#ffffff" id="namedview5" inkscape:window-maximized="1" inkscape:window-y="0" inkscape:window-x="0" inkscape:window-height="744" inkscape:window-width="1366" inkscape:current-layer="svg2" inkscape:pageopacity="0" inkscape:pageshadow="2">
+	</sodipodi:namedview>
+<path id="Selection__x23_1" inkscape:export-ydpi="90" inkscape:export-xdpi="90" inkscape:export-filename="/home/rory/sourcecode/cabbageaudio/cabbage/Images/CabbageLogo3.png" inkscape:connector-curvature="0" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1.3095" d="
+	M175.077,111.325c34.472,6.61,57.496,30.6,70.092,60.913l6.728,19.61l5.141,7.354c3.659,5.934,3.805,8.891,3.728,15.525
+	c-0.18,13.947-12.014,24.227-26.563,23.662c-21.276-0.816-30.821-25.238-19.031-40.82c5.613-7.428,13.299-9.781,22.459-9.805
+	l-7.978-21.244c-8.74-18.197-21.962-31.866-40.008-41.998c-8.654-4.854-19.313-8.098-29.134-9.969
+	c-4.619-0.883-11.911-0.507-14.567-4.412C157.493,109.25,163.466,109.094,175.077,111.325L175.077,111.325z M86.844,142.006
+	c-4.996,5.058-9.306,10.933-12.562,17.158c-4.182,7.991-7.832,20.501-8.74,29.415l-0.849,11.44c-0.086,2.908,0.856,4.453,0,7.354
+	c-5.853-13.662-8.072-26.686,0-40.038c3.659-5.507,6.332-7.819,10.985-12.256c-5.15,1.642-8.492,2.745-12.819,6.145
+	c-11.636,9.135-15.038,26.555-9.605,39.612c4.353,10.5,9.528,10.982,12.999,17.977c-19.16-10.672-22.356-38.714-8.98-54.746
+	c2.69-3.227,6.007-5.752,9.837-7.655c2.64-1.316,6.024-1.978,8.029-4.028l6.743-9.56c5.698-7.117,7.069-7.436,13.505-13.074
+	C95.155,134.318,89.979,138.835,86.844,142.006z M251.305,245.678c-15.783,12.395-39.425,9.273-51.438-6.439
+	c-6.906-9.02-8.886-21.105-6.358-31.865c2.622-11.145,9.923-21.383,20.985-26.229c2.854-1.25,12.116-4.412,14.79-2.377
+	c1.311,0.996,1.311,2.663,1.491,4.093c-4.979,0.425-8.638,1.7-12.854,4.29c-9.341,5.727-16.213,15.958-16.213,26.76
+	c0,16.332,16.761,32.92,34.207,31.719c12.879-0.891,16.204-5.654,25.706-12.109C258.769,238.576,255.992,242,251.305,245.678
+	L251.305,245.678z M262.479,231.885l-0.857,0.816v-0.816H262.479z"/>
+<path id="Selection__x23_1-1" inkscape:export-ydpi="90" inkscape:export-xdpi="90" inkscape:export-filename="/home/rory/sourcecode/cabbageaudio/cabbage/Images/CabbageLogo3.png" inkscape:connector-curvature="0" fill="#93D200" stroke="#000000" stroke-width="0.4784" stroke-opacity="0" d="
+	M167.001,285.062h-1.84l-4.6,0.293l-2.452-0.266c-18.08-1.234-37.896-6.711-52.734-17.324
+	c-20.597-14.723-31.116-37.422-32.204-62.25l-0.295-3.352c-0.11-9.488,1.383-21.773,4.399-30.783
+	c2.772-8.268,6.445-15.921,11.816-22.857c5.301-6.849,9.434-9.146,13.754-17.677l9.026-17.372c0.695-1.134,2.866-5.358,3.722-5.873
+	c0.871-0.528,1.674,0.192,2.352,0.698c1.092,0.811,2.588,2.167,3.985,2.298c1.616,0.149,2.797-1.137,3.667-2.304
+	c0.533-0.71,1.092-1.862,2.171-1.472c0.678,0.244,1.895,1.539,2.44,2.081c1.644,1.631,5.252,5.733,7.358,6.227
+	c1.671,0.394,3.137-0.643,4.289-0.844c1.72-0.299,2.864,1.655,3.726,2.847l3.768,5.485l4.057,5.486l6.03,9.144
+	c5.488,8.183,10.495,15.059,13.257,24.687c1.65,5.748,1.732,9.677,1.665,15.543c-0.04,3.225-1.287,9.82-2.018,13.105
+	c-2.299,10.354-5.812,20.453-6.595,31.088l-0.278,3.047v4.268c0.019,11.496,5.411,25.15,11.555,34.744l8.03,11.277l4.329,5.484
+	C184.316,282.701,172.559,284.996,167.001,285.062L167.001,285.062z M135.421,108.293l-0.307,0.305v-0.305H135.421z
+	 M197.354,112.561l-0.308,0.305v-0.305H197.354z M197.966,112.865l-0.306,0.305v-0.305H197.966z M198.579,113.17l-0.307,0.305
+	v-0.305H198.579z M199.192,113.475l-0.307,0.305v-0.305H199.192z M199.806,113.78l-0.307,0.305v-0.305H199.806z M200.419,114.084
+	l-0.307,0.305v-0.305H200.419z M201.032,114.389l-0.307,0.305v-0.305H201.032z M201.646,114.694l-0.307,0.305v-0.305H201.646z
+	 M202.259,114.999l-0.307,0.305v-0.305H202.259z M219.428,125.867l6.261,5.228c0.496,0.134,1.181,0.055,1.71,0
+	c4.783,0.151,8.325,3.779,10.906,7.372c5.387,7.494,8.144,16.162,10.362,24.991c1.132,4.499,1.896,9.106,2.389,13.715
+	c0.15,1.394,0.702,4.276,0.258,5.486c-0.298-3.521-2.962-11.124-4.277-14.629c-5.476-14.603-15.057-29.106-26.688-39.569
+	c-3.406-3.062-6.944-5.982-10.73-8.579c-1.668-1.143-5.237-3.078-6.439-4.273C208.608,117.933,214.776,122.231,219.428,125.867
+	L219.428,125.867z M162.401,120.485c1.089,0.411,2.342,0.594,3.066,1.521h-6.132c-1.49,0.021-4.551,0.686-5.771,0
+	c-0.898-0.512-1.99-2.429-2.508-3.35C153.908,118.787,159.808,119.506,162.401,120.485z M167.307,120.485l-0.306,0.305v-0.305
+	H167.307z M167.001,123.533c4.69,0.006,7.866,1.853,11.957,3.886c7.342,3.651,14.363,8.138,20.541,13.532
+	c3.443,3.011,5.365,4.977,8.303,8.487c0.675,0.808,2.33,2.624,2.37,3.657c0.027,0.838-0.972,2.335-1.432,3.048
+	c-1.567,2.417-3.281,4.8-5.129,7.01c-6.586,7.885-12.086,11.722-19.441,18.338c-1.895,1.704-6.221,6.764-7.665,7.568
+	c0.665-3.624,1.526-7.602,1.533-11.277v-6.095c-0.01-6.653-2.751-15.205-5.921-21.03l-12.07-18.896
+	c-1.138-1.792-4.074-6.004-4.697-7.619L167.001,123.533L167.001,123.533z M189.995,131.457l-0.307,0.305v-0.305H189.995z
+	 M190.914,132.066l-0.307,0.305v-0.305H190.914z M212.683,155.838c3.839,5.724,7.539,12.386,9.811,18.896
+	c-4.574,1.204-6.886,1.46-11.343,3.737c-9.91,5.059-17.486,14.738-20.84,25.216c-6.536,20.424,3.71,44.439,24.824,51.348
+	c4.366,1.43,7.126,1.684,11.651,1.684c-1.536,2.611-5.562,6.027-7.972,8.049c-5.868,4.922-11.442,8.375-18.396,11.551
+	c-2.373,1.082-4.801,2.359-7.358,2.953l-4.776-5.791c-3.958-5.043-8.026-10.789-11.02-16.457
+	c-8.201-15.553-9.856-30.838-5.705-47.85c1.177-4.822,1.938-10.828,4.743-14.934c9.771-14.297,26.747-21.645,35.767-38.402H212.683z
+	"/>
 </svg>
