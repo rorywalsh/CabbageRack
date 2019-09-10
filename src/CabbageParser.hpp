@@ -48,7 +48,7 @@ struct CabbageControl
 		if(type == "rslider")
 		{
 			colour = nvgRGBA(220, 220, 220, 255);
-			trackerColour = nvgRGBA(147, 210, 0, 255);
+			trackerColour = nvgRGBA(0, 128, 0, 255);
 			outlineColour = nvgRGBA(25, 25, 25, 255);
 			textColour = nvgRGBA(255, 255, 255, 255);
 			range[Range::min] = 0;
@@ -57,18 +57,6 @@ struct CabbageControl
 
 			bounds = {0, 0, 80, 80};
 			range = {0, 1, 0, 1, .01};
-			channel = "rslider_";
-			hasChannel = true;
-			text.push_back("");	
-		}
-		else if(type == "cslider")
-		{
-			colour = nvgRGBA(220, 220, 220, 255);
-			trackerColour = nvgRGBA(147, 210, 0, 255);
-			outlineColour = nvgRGBA(25, 25, 25, 255);
-			textColour = nvgRGBA(255, 255, 255, 255);
-			bounds = {0, 0, 80, 80};
-			range = {0, 1, 0, 1, 1};
 			channel = "rslider_";
 			hasChannel = true;
 			text.push_back("");	
@@ -146,6 +134,10 @@ struct CabbageControl
 			colour = nvgRGBA(20, 20, 20, 255);
 			fontColour = nvgRGBA(0, 0, 0, 255);
 			outlineColour = nvgRGBA(180, 180, 180, 255);
+			text.push_back("");
+		}
+		else if(type == "screw")
+		{
 			text.push_back("");
 		}
 	}
@@ -236,7 +228,8 @@ struct CabbageParser
 					control.find("cvoutput") != std::string::npos ||
 					control.find("combobox") != std::string::npos ||
 					control.find("cslider") != std::string::npos ||
-					control.find("label") != std::string::npos)
+					control.find("label") != std::string::npos ||
+					control.find("screw") != std::string::npos)
 				{
                    
 					CabbageControl cabbageCtrl(control);

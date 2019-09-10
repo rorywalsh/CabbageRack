@@ -33,7 +33,7 @@ void CabbageRackModule::createAndCompileCsound()
 #ifndef ARCH_MAC
 	CSOUND_PARAMS* csoundParams = nullptr;
 	csoundParams = new CSOUND_PARAMS();
-	// csoundParams->sample_rate_override = sampleRate;
+	// csoundParams->sample_rate_override = engineGetSampleRate();
 	csoundParams->displays = 0;		
 	csound->SetParams(csoundParams);
 	compileError = csound->Compile(csdFileName.c_str());
@@ -120,7 +120,7 @@ void CabbageRackModule::process(const ProcessArgs &args)
 		for ( int i = 0 ; i < (int)audioInputControls.size() ; i++)
 			audioInputChannels[i][kIndex] = inputs[i].value;	
 		for ( int i = 0 ; i < (int)audioOutputControls.size() ; i++)
-			outputs[i].value = (audioOutputChannels[i][kIndex] / csScale ) * 10.f;	
+			outputs[i].value = (audioOutputChannels[i][kIndex] / csScale );	
 		
 		kIndex++;
 	}

@@ -1,10 +1,15 @@
 <Cabbage>
 form caption("CabbageModule") size(100, 380), colour(255, 255, 255), pluginid("def1")
-cvinput bounds(40, 60, 20, 20), channel("cvInput1")
-label bounds(0, 90, 100, 40), fontcolour(0,0,0) text("Input")
-cvoutput bounds(40, 300, 20, 20), channel("cvOutput1")
-label bounds(0, 330, 100, 40), fontcolour(0,0,0) text("Output")
-rslider bounds(0, 150, 100, 100), channel("gain"), textcolour(0, 0, 0), range(0, 1, 0, 1, .01)
+screw bounds(5, 10, 15, 15)
+screw bounds(80, 10, 15, 15)
+screw bounds(5, 360, 15, 15)
+screw bounds(80, 360, 15, 15)
+
+cvinput bounds(34, 60, 30, 30), channel("cvInput1")
+label bounds(0, 90, 100, 12), fontcolour(0,0,0) text("Input")
+cvoutput bounds(34, 300, 30, 30), channel("cvOutput1")
+label bounds(0, 330, 100, 12), fontcolour(0,0,0) text("Output")
+rslider bounds(0, 150, 100, 100), channel("gain"), text("Gain"), textcolour(0, 0, 0, 255), range(0, 1, 0, 1, 0.01)
 </Cabbage>
 <CsoundSynthesizer>
 <CsOptions>
@@ -19,10 +24,10 @@ nchnls = 2
 
 instr 1
     aInput chnget "cvInput1"
-    
+    printk2 chnget:k("gain")
     aOut = aInput*chnget:k("gain")
 
-    chnset a1, "cvOutput1"
+    chnset aOut, "cvOutput1"
 endin
 
 </CsInstruments>
