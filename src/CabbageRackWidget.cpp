@@ -51,7 +51,7 @@ CabbageRackWidget::CabbageRackWidget(CabbageRackModule *module)
 				addOutput(createOutput<CabbagePort>(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]), module, aRateOutputIndex++));
 				
 			else if(control.type == "light")
-			 	addChild(new CabbageLight(control, module, lightIndex++));		
+			 	addChild(new CabbageLight(control, module, lightIndex));		
 
 			else if(control.type == "screw")
 				addChild(createWidget<CabbageScrew>(Vec(control.bounds[Bounds::x], control.bounds[Bounds::y])));

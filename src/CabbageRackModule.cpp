@@ -95,6 +95,8 @@ void CabbageRackModule::createAndCompileCsound()
 
 void CabbageRackModule::process(const ProcessArgs &args)
 {
+
+	std::vector<float> brightness = {.5f, .4f};
 	if(compileError==0)
 	{		
 		if(kIndex == ksmps)
@@ -112,7 +114,10 @@ void CabbageRackModule::process(const ProcessArgs &args)
 					if(cabbageControls[i].hasChannel)
 						csound->SetChannel(cabbageControls[i].channel.c_str(), params[controlIndex++].value);	
 					else if(cabbageControls[i].isLight)
-					 	lights[lightIndex++].value = csound->GetChannel(cabbageControls[i].channel.c_str());			
+					{
+					 	lights[lightIndex++].value = csound->GetChannel(cabbageControls[i].channel.c_str());				
+					}
+
 
 			}
 		}
@@ -124,6 +129,7 @@ void CabbageRackModule::process(const ProcessArgs &args)
 		
 		kIndex++;
 	}
+
 }
 
 

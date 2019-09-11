@@ -480,22 +480,92 @@ struct CabbageImage : FramebufferWidget
 	}
 };
 
+// struct CabbageLight : MultiLightWidget 
+// {
+// 	int corners = corners;
+
+
+// 	CabbageLight(CabbageControl control, Module* mod, int lightId) 
+// 	{
+// 		box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
+// 		box.pos = Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]);
+//		addBaseColor(control.colour);
+// 		addBaseColor(nvgRGBA(0, 225, 0, 255));
+// 		// module = mod;
+// 		// firstLightId = lightId;
+// 		corners = control.corners;
+// 	}
+// };
+
 struct CabbageLight : ModuleLightWidget 
 {
 	int corners = corners;
-
+	NVGcolor outlineColour, backgroundColour;
 
 	CabbageLight(CabbageControl control, Module* mod, int lightId) 
 	{
 		box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
 		box.pos = Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]);
 		addBaseColor(control.colour);
+		color =  nvgRGBA(0, 255, 0, 100);
+		backgroundColour = control.colour;
 		module = mod;
 		firstLightId = lightId;
 		corners = control.corners;
 	}
-};
 
+	void draw(const DrawArgs& args) override
+	{
+		drawLight(args);
+		drawHalo(args);
+	}
+
+	void drawLight(const DrawArgs& args) override
+	{
+	float radius = box.size.x / 2.0;
+
+		nvgBeginPath(args.vg);
+		nvgCircle(args.vg, radius, radius, radius);
+		nvgFillColor(args.vg, nvgRGB(0,0,0));
+		nvgFill(args.vg);
+
+		// Background
+		if (bgColor.a > 0.0) {
+			nvgFillColor(args.vg, bgColor);
+			nvgFill(args.vg);
+		}
+
+		// Foreground
+		if (color.a > 0.0) {
+			nvgFillColor(args.vg, color);
+			nvgFill(args.vg);
+		}
+
+		// // Border
+		// if (borderColor.a > 0.0) {
+		 	nvgStrokeWidth(args.vg, 1);
+		 	nvgStrokeColor(args.vg, nvgRGBA(0, 0, 0, 255));
+		 	nvgStroke(args.vg);
+		// }
+	}
+
+	void drawHalo(const DrawArgs& args) override
+	{
+		float radius = box.size.x / 2.0;
+		float oradius = 4.0 * radius;
+
+		nvgBeginPath(args.vg);
+		nvgRect(args.vg, radius - oradius, radius - oradius, 2 * oradius, 2 * oradius);
+
+		NVGpaint paint;
+		NVGcolor icol = color::mult(color, 0.07);
+		NVGcolor ocol = nvgRGB(0, 0, 0);
+		paint = nvgRadialGradient(args.vg, radius, radius, radius, oradius, icol, ocol);
+		nvgFillPaint(args.vg, paint);
+		nvgGlobalCompositeOperation(args.vg, NVG_LIGHTER);
+		nvgFill(args.vg);
+	}
+};
 //===================================================================
 // Can't get this one to work with API 1.0... see below for current implementation
 //===================================================================
