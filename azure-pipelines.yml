@@ -25,8 +25,8 @@ jobs:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
 
-#   - task: PublishBuildArtifacts@1
-#     inputs:
+  - task: PublishBuildArtifacts@1
+    inputs:
       pathtoPublish: '$(Build.ArtifactStagingDirectory)'
 #       # artifactName: 'Cabbage64Setup.exe'
   
