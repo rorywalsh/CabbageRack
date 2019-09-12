@@ -9,6 +9,7 @@ void MessageCallback(CSOUND* cs, int attr, const char *format, va_list valist)
   return;
 }
 
+
 CabbageRackModule::CabbageRackModule()
 {
 	//setting up 1000 dummy parameters to start, resized later..
@@ -19,6 +20,7 @@ CabbageRackModule::CabbageRackModule()
 	lights.resize(numLights);
 	outputs.resize(audioOutputControls.size());              
 	csound->SetMessageCallback(MessageCallback);
+
 }
 
 void CabbageRackModule::createAndCompileCsound() 
@@ -133,6 +135,4 @@ void CabbageRackModule::process(const ProcessArgs &args)
 }
 
 
-
-
-Model *modelCabbageRack = createModel<CabbageRackModule, CabbageRackWidget>("CabbageRack");
+Model *modelCabbageRack = createModel<CabbageRackModule, CabbageRackWidget>("Demo");
