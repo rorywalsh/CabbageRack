@@ -128,6 +128,12 @@ struct CabbageRotarySlider : virtual Knob, FramebufferWidget
 		const int centery = FramebufferWidget::box.size.y/2.65f;
 		const int innerSize = FramebufferWidget::box.size.x*.6f;
 		const int radius = innerSize/2;
+		const float sliderValue = (dirtyValue+abs(min))/(abs(maxValue));
+		// const int x = radius * cos((NVG_PI* 1.67) * sliderValue);  
+		// const int y = radius * sin((NVG_PI* 1.67) * sliderValue);
+		const float angle = (NVG_PI / 1.5) + (NVG_PI* 1.67) * sliderValue;
+		const float x = (radius-radius*.15)*.5*cos( (NVG_PI / 1.5) + (NVG_PI* 1.67) * sliderValue) + centerx;
+		const float y = (radius-radius*.15)*.5*sin( (NVG_PI / 1.5) + (NVG_PI* 1.67) * sliderValue) + centery;
 
 		//tracker background
 		nvgBeginPath(args.vg);
@@ -137,11 +143,12 @@ struct CabbageRotarySlider : virtual Knob, FramebufferWidget
 		nvgFillColor(args.vg, nvgRGBA(0,0,0, 255));
 		nvgFill(args.vg);
 
+
 		
 		//pie segment
 		nvgBeginPath(args.vg);
 		nvgMoveTo(args.vg, centerx, centery);
-		nvgArc(args.vg, centerx, centery, radius, (NVG_PI / 1.5), (NVG_PI / 1.5) + (NVG_PI* 1.67) * (dirtyValue+abs(min))/(abs(maxValue)), NVG_CW);
+		nvgArc(args.vg, centerx, centery, radius, (NVG_PI / 1.5), (NVG_PI / 1.5) + ((NVG_PI* 1.67) *sliderValue), NVG_CW);
 		nvgLineTo(args.vg, centerx, centery);
 		nvgFillColor(args.vg, tracker);
 		nvgFill(args.vg);
@@ -175,6 +182,16 @@ struct CabbageRotarySlider : virtual Knob, FramebufferWidget
 		nvgTextAlign(args.vg, NVG_ALIGN_TOP|NVG_ALIGN_CENTER);
 		nvgTextBox(args.vg, 0, FramebufferWidget::box.size.y-20, FramebufferWidget::box.size.x, text.c_str(), NULL);
 		nvgFill(args.vg);
+
+		
+		
+		nvgBeginPath(args.vg);
+		nvgCircle(args.vg, x, y, radius*.15);
+		// nvgRoundedRect(args.vg, x, y, 10, 10, 1);
+		nvgRotate(args.vg, angle);
+		nvgFillColor(args.vg, nvgRGBA(80, 80, 80, 255));
+		nvgFill(args.vg);
+		nvgClosePath(args.vg);
 
 	}
 };
