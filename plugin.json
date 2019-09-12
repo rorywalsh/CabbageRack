@@ -1,9 +1,9 @@
 {
   "slug": "CabbageRack",
-  "name": "Cabbage Rack",
+  "name": "CabbageRack",
   "version": "1.0.0",
   "license": "GPL",
-  "brand": "Cabbage Rack",
+  "brand": "CabbageRack",
   "author": "Rory Walsh",
   "authorEmail": "",
   "authorUrl": "cabbageaudio.com",
@@ -14,7 +14,7 @@
   "modules": [
     {
       "slug": "CabbageRack",
-      "name": "CabbageRackModule",
+      "name": "CabbageRack",
       "description": "VCV Rack interface for Cabbage",
       "tags": [
         "Csound",

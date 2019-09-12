@@ -9,7 +9,7 @@ CabbageRackWidget::CabbageRackWidget(CabbageRackModule *module)
     setModule(module);
 	//Cabbage will need to export a dummy SVG...
     setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/CabbageRack.svg")));
-	box.size.x = 40;
+	box.size.x = 120;
     int kRateControlIndex = 0;
 	int aRateInputIndex = 0;
 	int aRateOutputIndex = 0;
