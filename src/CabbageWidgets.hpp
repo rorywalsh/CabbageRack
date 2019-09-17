@@ -126,7 +126,7 @@ struct CabbageRotarySlider : virtual Knob, FramebufferWidget
 	{		
 		const int centerx = FramebufferWidget::box.size.x/2.65f + FramebufferWidget::box.size.x/7.5f;
 		const int centery = FramebufferWidget::box.size.y/2.65f;
-		const int innerSize = FramebufferWidget::box.size.x*.6f;
+		const int innerSize = FramebufferWidget::box.size.x;
 		const int radius = innerSize/2;
 		const float sliderValue = (dirtyValue+abs(min))/(abs(maxValue));
 		// const int x = radius * cos((NVG_PI* 1.67) * sliderValue);  
