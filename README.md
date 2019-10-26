@@ -1,11 +1,11 @@
 # Cabbage for VCV RACK 
-(THIS WILL NOT WORK WITH THE LATEST VERSION OF THE VCV-RACK SDK! I WILL TRY TO UPDATE IT SOON...)
+
 
 ![sample screenshot](https://github.com/rorywalsh/CabbageRack/blob/master/example.gif)
 
 ## Building 
 
-To build, follow the instructions [here](https://vcvrack.com/manual/PluginDevelopmentTutorial.html)(for v0.5) to compile and build the template plugin. Then cd to `Rack/plugins/` and run 
+To build, follow the instructions [here](https://vcvrack.com/manual/PluginDevelopmentTutorial.html) to compile and build the template plugin. Then cd to `Rack/plugins/` and run 
 
 ```
 git clone https://github.com/rorywalsh/CabbageRack
