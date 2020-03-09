@@ -5,7 +5,7 @@ Invoke-WebRequest -Uri "https://github.com/rorywalsh/cabbage/releases/download/v
 cd "C:/Program Files/Csound6_x64"
 dir
 choco install -y msys2 --params "/InstallDir:C:\tools\msys64"
-Invoke-WebRequest -Uri "https://vcvrack.com/downloads/Rack-SDK-1.1.4.zip" -OutFile "D:/a/Rack-SDK-1.1.4.zip" 
+Invoke-WebRequest -Uri "https://vcvrack.com/downloads/Rack-SDK-1.1.6.zip" -OutFile "D:/a/Rack-SDK-1.1.6.zip" 
 cd D:/a
 7z.exe x D:/a/Rack-SDK-1.1.4.zip -o"D:/a"
 dir
