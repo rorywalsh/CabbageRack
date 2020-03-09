@@ -15,13 +15,14 @@ ls -1 $BUILD_ARTIFACTSTAGINGDIRECTORY
 brew install git wget cmake autoconf automake libtool jq python
 
 #install Csound
-curl -L -o csound6.13.0-MacOS_x86_64.dmg 'https://github.com/csound/csound/releases/download/6.13.0/csound6.13.0-MacOS_x86_64.dmg'
+pwd
+curl -L -o csound6.13.0-MacOS_x86_64.dmg 'https://github.com/csound/csound/releases/download/6.13.0/Csound6.13-MacOS_x86_64.dmg'
 ls
 hdiutil attach csound6.13.0-MacOS_x86_64.dmg
-cp -R /Volumes/Csound6.13.0/ Csound
-hdiutil detach /Volumes/Csound6.13.0/
+cp -R /Volumes/Csound6.13/ Csound
+hdiutil detach /Volumes/Csound6.13/
 cd Csound
-sudo installer -pkg csound6.13.0-MacOS_x86_64.pkg -target /
+sudo installer -pkg csound6.13-MacOS_x86_64.pkg -target /
 
 #return to main working dir after installing Csound
 cd $SYSTEM_DEFAULTWORKINGDIRECTORY
