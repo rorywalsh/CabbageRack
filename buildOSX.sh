@@ -27,8 +27,8 @@ sudo installer -pkg csound6.13.0-MacOS_x86_64.pkg -target /
 cd $SYSTEM_DEFAULTWORKINGDIRECTORY
 cd ..
 
-curl -L -o Rack-SDK-1.1.4.zip 'https://vcvrack.com/downloads/Rack-SDK-1.1.4.zip'
-unzip -q Rack-SDK-1.1.4.zip
+curl -L -o Rack-SDK-1.1.6.zip 'https://vcvrack.com/downloads/Rack-SDK-1.1.6.zip'
+unzip -q Rack-SDK-1.1.6.zip
 ls
 cp -rf s Rack-SDK/CabbageRack
 cd Rack-SDK
