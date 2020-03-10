@@ -19,4 +19,4 @@ SOURCES += $(wildcard src/*.cpp)
 DISTRIBUTABLES += $(wildcard LICENSE*) res $(wildcard README*)
 
 # Include the VCV Rack plugin Makefile framework
-include $(RACK_DIR)/plugin.mk
+include "D:/a/Rack-SDK/plugin.mk"
