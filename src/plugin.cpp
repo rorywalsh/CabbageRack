@@ -3,8 +3,11 @@
 
 Plugin *pluginInstance;
 
-
+#ifdef ARCH_WIN
+__declspec(dllexport) void init(Plugin *p) {
+#else
 void init(Plugin *p) {
+#endif
 	pluginInstance = p;
 	const std::string pluginName = pluginInstance->path.substr(pluginInstance->path.find_last_of("/")+1);
 	std::cout << pluginName;
