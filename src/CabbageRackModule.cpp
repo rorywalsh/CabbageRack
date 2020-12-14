@@ -40,7 +40,7 @@ void CabbageRackModule::createAndCompileCsound()
 	csound->SetParams(csoundParams);
 	compileError = csound->Compile(csdFileName.c_str());
 #else
-	std::string sr_override = "--sample-rate=" + to_string(APP->engine->getSampleRate());
+	std::string sr_override = "--sample-rate=" + std::to_string(APP->engine->getSampleRate());
 	compileError = csound->Compile(csdFileName.c_str());
 #endif
 	
