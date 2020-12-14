@@ -35,12 +35,12 @@ void CabbageRackModule::createAndCompileCsound()
 #ifndef ARCH_MAC
 	CSOUND_PARAMS* csoundParams = nullptr;
 	csoundParams = new CSOUND_PARAMS();
-	// csoundParams->sample_rate_override = engineGetSampleRate();
+	csoundParams->sample_rate_override = APP->engine->getSampleRate();
 	csoundParams->displays = 0;		
 	csound->SetParams(csoundParams);
 	compileError = csound->Compile(csdFileName.c_str());
 #else
-	//std::string sr_override = "--sample-rate=" + to_string(engineGetSampleRate());
+	std::string sr_override = "--sample-rate=" + to_string(APP->engine->getSampleRate());
 	compileError = csound->Compile(csdFileName.c_str());
 #endif
 	

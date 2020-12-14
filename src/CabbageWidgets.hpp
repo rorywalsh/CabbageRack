@@ -91,7 +91,8 @@ struct CabbageRotarySlider : virtual Knob, FramebufferWidget
 			paramQuantity = mod->paramQuantities[id];
 		}
 		
-		// FramebufferWidget::box = math::Rect(math::Vec(10, 10), math::Vec(100, 100));
+		// FramebufferWidget::box = math::Rect(math::Vec(10, 10), math::Vec(100, 100));y
+
 		Knob::box.pos = Vec(control.bounds[Bounds::x], control.bounds[Bounds::y]);
 		Knob::box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
 		FramebufferWidget::box.size = Vec(control.bounds[Bounds::width], control.bounds[Bounds::height]);
