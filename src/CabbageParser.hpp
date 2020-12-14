@@ -135,6 +135,7 @@ struct CabbageControl
 			fontColour = nvgRGBA(0, 0, 0, 255);
 			outlineColour = nvgRGBA(180, 180, 180, 255);
 			text.push_back("");
+			channel = type+"_";
 		}
 		else if(type == "screw")
 		{
@@ -368,7 +369,7 @@ struct CabbageParser
 					if (line.find(" corners(") != std::string::npos)				
 						cabbageCtrl.corners = atoi(getParameter(line, " corners(").c_str());
 
-					cabbageControls.push_back(cabbageCtrl);
+
 				}
 			}
 		}
