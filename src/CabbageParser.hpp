@@ -203,7 +203,7 @@ struct CabbageParser
 		std::string line;
 		while (std::getline(input, line))
 		{
-            
+            std::cout << line << std::endl;
 
 			if (line.find("</") != std::string::npos)
 				break;
@@ -369,7 +369,7 @@ struct CabbageParser
 					if (line.find(" corners(") != std::string::npos)				
 						cabbageCtrl.corners = atoi(getParameter(line, " corners(").c_str());
 
-
+					cabbageControls.push_back(cabbageCtrl);
 				}
 			}
 		}

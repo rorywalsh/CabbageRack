@@ -135,4 +135,4 @@ void CabbageRackModule::process(const ProcessArgs &args)
 }
 
 
-Model *modelCabbageRack = createModel<CabbageRackModule, CabbageRackWidget>("Demo");
+Model *modelCabbageRack = createModel<CabbageRackModule, CabbageRackWidget>("CabbageRack");
