@@ -3,25 +3,38 @@
 
 ![sample screenshot](https://github.com/rorywalsh/CabbageRack/blob/master/example.gif)
 
-## Building 
+## Building
 
-To build, follow the instructions [here](https://vcvrack.com/manual/PluginDevelopmentTutorial.html) to compile and build the template plugin. Then cd to `Rack/plugins/` and run 
+This section outlines the steps necessary to build this project.
+
+### Install VCV Rack SDK
+First, download and extract the latest [Rack SDK](https://vcvrack.com/downloads/). 
+
+### Compile and build template plugin
+
+Once you have extracted the Rack SDK, follow the [instructions to compile and build the template plugin](https://vcvrack.com/manual/PluginDevelopmentTutorial#Creating-the-template-plugin). 
+
+### Make CabbageRack within the Rack/plugins directory
+
+After you have built the template plugin, change directory (`cd`) in to `Rack/plugins/` and run 
 
 ```
 git clone https://github.com/rorywalsh/CabbageRack
 cd CabbageRack
 ```
 
-Then call the appropriate makefile for your platform by using the -f filename command line option to make:
+From within the `CabbageRack` directory, call `make` with the appropriate makefile for your platform by using the `-f <filename>` command line option. E.g. for Windows:
+
 ```
 make -f Makefile.win
 ```
 
-> just call ```make``` on its own to build for Linux. 
+On Linux, you can politely call `make` without any arguments.
 
-The build script uses the locations for the Csound headers and libraries. if you install to custom location, update the makefiles.  
+**Note:** The build script uses the locations for the Csound headers and libraries. If you install Csound to a custom location, update the makefiles.  
 
 ## Running
+
 CabbageRack comes with a simple example file. In order to create an new module simply copy the CabbageRack folder and rename it. The name you choose will be the title of your new module. The .csd file contained within the folder must have the same name as the folder. For example, if the module is called CabbageSoup, the .csd file contained within must be call CabbageSoup.csd.  
 
 #### IMPORTANT: Please read before this interface:
