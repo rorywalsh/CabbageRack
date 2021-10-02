@@ -14,9 +14,9 @@ First, download and extract the latest [Rack SDK](https://vcvrack.com/downloads/
 
 Once you have extracted the Rack SDK, follow the [instructions to compile and build the template plugin](https://vcvrack.com/manual/PluginDevelopmentTutorial#Creating-the-template-plugin). 
 
-### Make CabbageRack within the Rack/plugins directory
+### Make CabbageRack within the Rack SDK
 
-After you have built the template plugin, change directory (`cd`) in to `Rack/plugins/` and run 
+After you have built the template plugin, change directory (`cd`) in to the Rack SDK directory and run 
 
 ```
 git clone https://github.com/rorywalsh/CabbageRack
