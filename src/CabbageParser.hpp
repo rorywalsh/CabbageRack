@@ -120,7 +120,7 @@ struct CabbageControl
 		}
 		else if(type == "light")
 		{
-			colour = nvgRGBA(255, 0, 0, 255);
+			colour = nvgRGBA(0, 128, 0, 255);
 			outlineColour = nvgRGBA(255, 255, 255, 255);
 			bounds = {0, 0, 80, 30};
 			isLight = true;
