@@ -70,7 +70,9 @@ struct CabbageControl
 			bounds = {0, 0, 80, 30};
 			range = {0, 1, 0, 1, 1};
 			hasChannel = true;
-			channel = "button_";		
+			channel = "button_";
+			text.push_back("Off");
+			text.push_back("On");				
 		}
 		else if(type == "checkbox")
 		{
