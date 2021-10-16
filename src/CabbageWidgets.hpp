@@ -223,8 +223,11 @@ struct CabbageButton : virtual Switch, FramebufferWidget {
 		fontColour = control.fontColour;
 
 		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/Vera-Bold.ttf"));
-		text[0] = control.text[0];
-		text[1] = control.text[1];
+		if(control.text.size()>0)
+			text[0] = control.text[0];
+		if(control.text.size()>1)
+			text[1] = control.text[1];
+
 		
 	}
 
