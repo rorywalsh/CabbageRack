@@ -288,9 +288,9 @@ struct CabbageParser
 						cabbageCtrl.colour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
 					}
 
-					if (line.find(" outlinecolour(") != std::string::npos)
+					if (line.find(" outlineColour(") != std::string::npos)
 					{
-						int *colourArray = getColourFromText(" outlinecolour", line);
+						int *colourArray = getColourFromText(" outlineColour", line);
 						cabbageCtrl.outlineColour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
 					}
 
@@ -306,21 +306,21 @@ struct CabbageParser
 						cabbageCtrl.colour1 = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
 					}
 
-					if (line.find(" textcolour(") != std::string::npos)
+					if (line.find(" textColour(") != std::string::npos)
 					{
-						int *colourArray = getColourFromText(" textcolour", line);
+						int *colourArray = getColourFromText(" textColour", line);
 						cabbageCtrl.textColour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
 					}
 
-					if (line.find(" trackercolour(") != std::string::npos)
+					if (line.find(" trackerColour(") != std::string::npos)
 					{
-						int *colourArray = getColourFromText(" trackercolour", line);
+						int *colourArray = getColourFromText(" trackerColour", line);
 						cabbageCtrl.trackerColour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
 					}
 
-					if (line.find(" fontcolour(") != std::string::npos)
+					if (line.find(" fontColour(") != std::string::npos)
 					{
-						int *colourArray = getColourFromText(" fontcolour", line);
+						int *colourArray = getColourFromText(" fontColour", line);
 						cabbageCtrl.fontColour = nvgRGBA(colourArray[0], colourArray[1], colourArray[2], colourArray[3]);
 					}
 
